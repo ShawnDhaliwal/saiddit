@@ -1,0 +1,57 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.header{
+    
+    height: 50px;
+    font-size: 50px;
+    background-color: #CEE3F9;
+    
+}
+
+.loginsignup{
+    background-color: #CEE3F9;
+    text-align: right;
+    padding-right: 10px;
+    margin-bottom: -20px;
+}
+
+#nav {
+    background-color: #F0F8FF;
+    border-bottom: solid #F0F8FF 2px;
+    height:38px;
+
+}
+
+#nav .default_subsaiddits {
+    list-style-type: none;
+    margin-top: 0px;
+    padding: 0;
+}
+
+
+#nav .subOption a {
+    padding: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #4682B4;
+    background-color: #F0F8FF;
+    float: left
+}
+
+#nav .subOption a:hover {
+    background-color: white;
+}
+
+.showing{
+    margin: 30px;
+    font-size: 20px;
+}
+
+.showing a{
+    
+  text-decoration: none;
+
+}
