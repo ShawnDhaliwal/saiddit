@@ -1,5 +1,5 @@
 # saiddit
-
+Using Jquery, Javascript, PHP, CSS, HTML, MySQL
 ### What has been done
 1. Simple layout
 2. Sign up capability
