@@ -7,6 +7,8 @@
          
         <title> Saiddit  </title>
         <link rel="stylesheet" type="text/css" href="styles.css" />
+        <link rel="stylesheet" type="text/css" href="sweetalert.css"/>
+        <script src = "sweetalert.min.js"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
         <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -35,7 +37,7 @@
             if($result && mysqli_num_rows($result)>0){
             ?>
                 <script type="text/javascript">
-                    alert("Username already taken"); 
+                    swal("Sorry","Username already taken","error"); 
                 </script>
             <?php
             
@@ -74,7 +76,7 @@
             }else{
                 ?>
                 <script type="text/javascript">
-                    alert("Invalid Username or Password"); 
+                    swal("Try Again","Invalid Username or Password","error"); 
                 </script>
             <?php
             }
@@ -109,13 +111,13 @@
                 if ($conn->query($sql) === TRUE) {
                 ?>
                     <script type ="text/javascript">
-                        alert("User added to friends list");
+                        swal("Success","User is now your friend","success");
                     </script>
                 <?php
                 } else {
                  ?>
                     <script type ="text/javascript">
-                        alert("Error");
+                        swal("Error","Something went wrong","error");
                     </script>
                 <?php
                 }
@@ -124,7 +126,7 @@
             } else {
                 ?>
                 <script type="text/javascript">
-                    alert("Invalid Username");
+                    swal("Try again","Can't find Username","error");
                 </script>
             <?php
                 
@@ -155,13 +157,13 @@
                 if ($conn->query($sql) === TRUE) {
                 ?>
                     <script type ="text/javascript">
-                        alert("User removed from friends list");
+                        swal("Success","User removed from friends list","success");
                     </script>
                 <?php
                 } else {
                  ?>
                     <script type ="text/javascript">
-                        alert("Error");
+                        swal("Error","Something went wrong","error");
                     </script>
                 <?php
                 }
@@ -170,7 +172,7 @@
             } else {
                 ?>
                 <script type="text/javascript">
-                    alert("User is not in your friends list");
+                    swal("User not found","User is not in your friends list", "error");
                 </script>
             <?php
                 
@@ -226,10 +228,11 @@
         </div>
         
         <div data-role="popup" class = "ui-content" id="friendspopup" style="min-width:250px;">
+              <h3>Your Friends</h3>
+
             <ul class = "friendslist">
                 <?php
                     include("config.php");
-                    echo '<h3>Your Friends</h3>';
                     $user = $_SESSION['username_in'];
                     $sql="SELECT * FROM users where username='$user'";
                     $result=mysqli_query($conn, $sql);
@@ -291,7 +294,7 @@
              var password1 = document.forms["SignUpForm"]["pswd"].value;
              var password2 = document.forms["SignUpForm"]["pswd2"].value;
             if (password1 != password2){
-                        alert("Passwords don't match")
+                        swal("Error","Passwords don't match","error")
                         return false;
                 }
 
