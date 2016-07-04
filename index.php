@@ -128,7 +128,7 @@
                 
             }
         }
-        
+        /* if remove friend button is pressed */
         if(isset($_POST['removefriendsubmit'])){
             
             include("config.php");
