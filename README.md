@@ -11,7 +11,7 @@ Using Jquery, Javascript, PHP, CSS, HTML, MySQL
 
 ### What needs to be done
 1. Everything other than what is mentioned above. See project pdf.
-2. [NEEDS FIXING] Log in and Sign up buttons sometimes need to be pressed twice for them to register. Sometimes page needs to be refreshed for   buttons to work.
+2. [NEEDS FIXING] Buttons need to be pressed twice for them to register. Sometimes page needs to be refreshed for   buttons to work.
 3. Layout is buggy at some spots. You will notice this if you try to edit the style.css file.
 
 ### Working on
