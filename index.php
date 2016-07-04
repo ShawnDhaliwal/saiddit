@@ -85,7 +85,93 @@
             unset($_SESSION["username_in"]); 
             
         }
+    /* if add friend button is pressed. This adds the friend to the friends table in mysql */
+        if(isset($_POST['addfriendsubmit'])){
+            
+            include("config.php");
+            $user = $_SESSION['username_in'];
+            $sql="SELECT * FROM users WHERE username='$user'";
+            $result=mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+            $userid = $row["id"];
+
+            $addfriend = ($_POST['addfriendl']);
+            $sql="SELECT * FROM users WHERE username='$addfriend'";
+            $result=mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+            if(mysqli_num_rows($result) == 1){
+                $friendid = $row["id"];
+                $sql = "INSERT INTO friends (user_id, friend_id)
+                    VALUES ('$userid','$friendid')";
+                
+                if ($conn->query($sql) === TRUE) {
+                ?>
+                    <script type ="text/javascript">
+                        alert("User added to friends list");
+                    </script>
+                <?php
+                } else {
+                 ?>
+                    <script type ="text/javascript">
+                        alert("Error");
+                    </script>
+                <?php
+                }
+         
+            $conn->close();
+            } else {
+                ?>
+                <script type="text/javascript">
+                    alert("Invalid Username");
+                </script>
+            <?php
+                
+            }
+        }
+        
+        if(isset($_POST['removefriendsubmit'])){
+            
+            include("config.php");
+            $user = $_SESSION['username_in'];
+            $sql="SELECT * FROM users WHERE username='$user'";
+            $result=mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+            $userid = $row["id"];
+
+            $removefriend = ($_POST['removefriendl']);
+            $sql="SELECT * FROM friends WHERE user_id='$userid' AND friend_id = 'removefriend'";
+            $result=mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+            if(mysqli_num_rows($result) == 1){
+                $friendid = $row["id"];
+                $sql = "DELETE FROM friends WHERE user_id = '$userid' AND friend_id = '$friendid'";
+                
+                if ($conn->query($sql) === TRUE) {
+                ?>
+                    <script type ="text/javascript">
+                        alert("User removed from friends list");
+                    </script>
+                <?php
+                } else {
+                 ?>
+                    <script type ="text/javascript">
+                        alert("Error");
+                    </script>
+                <?php
+                }
+         
+            $conn->close();
+            } else {
+                ?>
+                <script type="text/javascript">
+                    alert("User is not in your friends list");
+                </script>
+            <?php
+                
+            }
+        }
     ?> 
+        
         <div class = "header">
             <input type="image" src=redditlogo.png height="65px" >Saiddit            
         </div>
@@ -94,8 +180,12 @@
             <?php 
                 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) { ?>
                     <form method = "post" action = "">
+                    <a href = "#friendspopup" data-rel="popup" data-inline="true" data-mini="true" data-role="button">Friends</a>
+                    <a href = "#addfriendspopup" data-rel="popup" data-inline="true" data-mini="true" data-role="button">Add Friends</a>
+                    <a href = "#removefriendspopup" data-rel="popup" data-inline="true" data-mini="true" data-role="button">Remove Friends</a>
                     <input type="submit"  data-inline="true" data-mini="true" value="Log Out" name="submitbuttonlogout">
                     </form>
+
             <?php }else{?>
                     Want to join us?<a href = "#LogInPopUp" data-rel="popup" data-inline ="true" data-mini="true"> Log in</a> or <a href = "#SignUpPopUp" data-rel="popup">Sign up</a>
             <?php } ?>
@@ -112,6 +202,35 @@
                 <input type="submit" action = "" data-inline="true" value="Log in" name = "submitbuttonlogin">
             </form>
         </div>
+        
+        <div data-role="popup" class = "ui-content" id="addfriendspopup" style="min-width:250px;">
+            <form name = "addfriendform" method="post" action="">
+                <label for="addfriendusrnm" class="ui-hidden-accessible">Username:</label>
+                <input type="text" name="addfriendl" id="addfriend" placeholder="Username">
+                <input type="submit" action = "" data-mini="true" data-inline="true" value="Add" name = "addfriendsubmit">
+            </form>
+        </div>
+        
+        <div data-role="popup" class = "ui-content" id="removefriendspopup" style="min-width:250px;">
+            <form name = "removefriendform" method="post" action="">
+                <label for="removefriendusrnm" class="ui-hidden-accessible">Username:</label>
+                <input type="text" name="removefriendl" id="removefriend" placeholder="Username">
+                <input type="submit" action = "" data-mini="true" data-inline="true" value="Remove" name = "removefriendsubmit">
+            </form>
+        </div>
+        
+        <div data-role="popup" class = "ui-content" id="friendspopup" style="min-width:250px;">
+            <ul class = "friendslist">
+                <h3>Your Friends</h3>
+                <li style="list-style-type: none;">Friend A</li>
+                <li style="list-style-type: none;">Friend B</li>
+                <li style="list-style-type: none;">Friend C</li>
+                <li style="list-style-type: none;">Friend D</li>
+                <li style="list-style-type: none;">Friend E</li>
+
+            </ul>
+        </div>
+
         
         <script type="text/javascript">
             /*T his code executes if the log in button is pressed. It checks to see if the fields are filled in */
