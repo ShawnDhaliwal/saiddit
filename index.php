@@ -11,6 +11,8 @@
         <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
         <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
         <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+        <script src="http://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.min.js"></script>
+        <script src="http://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.min.js"></script>
         
     </head>
     <body>
@@ -128,7 +130,7 @@
                 
             }
         }
-        /* if remove friend button is pressed */
+        
         if(isset($_POST['removefriendsubmit'])){
             
             include("config.php");
@@ -139,12 +141,16 @@
             $userid = $row["id"];
 
             $removefriend = ($_POST['removefriendl']);
-            $sql="SELECT * FROM friends WHERE user_id='$userid' AND friend_id = 'removefriend'";
+            $sql="SELECT * FROM users where username='$removefriend'";
+            $result=mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+            $removefriendid = $row["id"];
+            
+            $sql="SELECT * FROM friends WHERE user_id='$userid' AND friend_id = '$removefriendid'";
             $result=mysqli_query($conn, $sql);
             $row = mysqli_fetch_assoc($result);
             if(mysqli_num_rows($result) == 1){
-                $friendid = $row["id"];
-                $sql = "DELETE FROM friends WHERE user_id = '$userid' AND friend_id = '$friendid'";
+                $sql = "DELETE FROM friends WHERE user_id = '$userid' AND friend_id = '$removefriendid'";
                 
                 if ($conn->query($sql) === TRUE) {
                 ?>
@@ -187,18 +193,18 @@
                     </form>
 
             <?php }else{?>
-                    Want to join us?<a href = "#LogInPopUp" data-rel="popup" data-inline ="true" data-mini="true"> Log in</a> or <a href = "#SignUpPopUp" data-rel="popup">Sign up</a>
+                    Want to join us?<a href = "#LogInPopUp" data-role = "button" data-rel="popup" data-inline ="true" data-mini="true"> Log in</a> or <a href = "#SignUpPopUp" data-role = "button" data-rel="popup" data-mini="true" data-inline="true">Sign up</a>
             <?php } ?>
      </div>
         
         <!-- This is the code for the log in pop up box that appears after clicking on log in-->
         <div data-role="popup" class = "ui-content" id="LogInPopUp" style="min-width:250px;">
-            <form name = "Loginform" method="post" action="" onsubmit = "return validateLogin()">
+            <form name = "Loginform" method="post" action="" >
                 <h3>Login information</h3>
                 <label for="usrnm" class="ui-hidden-accessible">Username:</label>
-                <input type="text" name="userl" id="usrnm" placeholder="Username">
+                <input type="text" name="userl" id="usrnm" placeholder="Username" required>
                 <label for="pswd" class="ui-hidden-accessible">Password:</label>
-                <input type="password" name="passwl" id="pswd" placeholder="Password">
+                <input type="password" name="passwl" id="pswd" placeholder="Password" required>
                 <input type="submit" action = "" data-inline="true" value="Log in" name = "submitbuttonlogin">
             </form>
         </div>
@@ -206,7 +212,7 @@
         <div data-role="popup" class = "ui-content" id="addfriendspopup" style="min-width:250px;">
             <form name = "addfriendform" method="post" action="">
                 <label for="addfriendusrnm" class="ui-hidden-accessible">Username:</label>
-                <input type="text" name="addfriendl" id="addfriend" placeholder="Username">
+                <input type="text" name="addfriendl" id="addfriend" placeholder="Username" required>
                 <input type="submit" action = "" data-mini="true" data-inline="true" value="Add" name = "addfriendsubmit">
             </form>
         </div>
@@ -214,54 +220,66 @@
         <div data-role="popup" class = "ui-content" id="removefriendspopup" style="min-width:250px;">
             <form name = "removefriendform" method="post" action="">
                 <label for="removefriendusrnm" class="ui-hidden-accessible">Username:</label>
-                <input type="text" name="removefriendl" id="removefriend" placeholder="Username">
+                <input type="text" name="removefriendl" id="removefriend" placeholder="Username" required>
                 <input type="submit" action = "" data-mini="true" data-inline="true" value="Remove" name = "removefriendsubmit">
             </form>
         </div>
         
         <div data-role="popup" class = "ui-content" id="friendspopup" style="min-width:250px;">
             <ul class = "friendslist">
-                <h3>Your Friends</h3>
-                <li style="list-style-type: none;">Friend A</li>
-                <li style="list-style-type: none;">Friend B</li>
-                <li style="list-style-type: none;">Friend C</li>
-                <li style="list-style-type: none;">Friend D</li>
-                <li style="list-style-type: none;">Friend E</li>
+                <?php
+                    include("config.php");
+                    echo '<h3>Your Friends</h3>';
+                    $user = $_SESSION['username_in'];
+                    $sql="SELECT * FROM users where username='$user'";
+                    $result=mysqli_query($conn, $sql);
+                    $row = mysqli_fetch_assoc($result);
+                    $userid = $row["id"];
+                
+                    $sql ="SELECT * FROM friends where user_id='$userid'";
+                    $result=mysqli_query($conn,$sql);
+                    $friendids = array();
+                    while($row = mysqli_fetch_assoc($result)) {
+                        array_push($friendids, $row['friend_id']);
+                    }
+                    
+                    $totalfriends = count($friendids);
+                    if($totalfriends == 0){
+                        
+                        echo"No Friends";
+                    }
+                    $x = 0;
+                    while($x<$totalfriends){
+                        $idfriend = $friendsids[$x];
+                        $sql = "SELECT * FROM users WHERE id ='$friendids[$x]'";
+                        $result = mysqli_query($conn, $sql);
+                        $row = mysqli_fetch_assoc($result);
+                        $friendname = $row["username"];
+                        echo "<li style='list-style-type: none;''>".$friendname."</li>";
+                        $x++;        
+                    }     
+                
+                ?>
 
             </ul>
         </div>
 
         
-        <script type="text/javascript">
-            /*T his code executes if the log in button is pressed. It checks to see if the fields are filled in */
-         function validateLogin() {
 
-             //  validateLogin function starts here
-             var username = document.forms["Loginform"]["usrnm"].value;
-             var password1 = document.forms["Loginform"]["pswd"].value;
-            //For some reason I cant get it to work in one if statement with lots of ORs
-                if (username==null || username==""){
-                    alert("Please fill out all fields");
-                    return false;
-                }
-                else if (password1==null || password1==""){
-                        alert("Please fill out all fields");
-                        return false;
-                }
-         }
-        </script>
 
         <!-- This code is for the sign up pop box that appears after clicking on sign up-->
         <div data-role="popup" class = "ui-content" id="SignUpPopUp" style="min-width:250px;">
             <form name = "SignUpForm" method="post" onsubmit=" return validateSignUp()">
                 <h3>Sign Up Information</h3>
-                <label for="usrnm" class="ui-hidden-accessible">Username:</label>
-                <input type="text" name="user" id="usrnm" placeholder="Username">
+                <fieldset>
+                <label for="usrnm" class="ui-hidden-accessible" requied>Username:</label>
+                <input type="text" name="user" id="usrnm" placeholder="Username" required>
                 <label for="pswd" class="ui-hidden-accessible">Password:</label>
-                <input type="password" name="passw" id="pswd" placeholder="Password">
-                <label for="pswd2" class="ui-hidden-accessible">Confirm Password:</label>
-                <input type="password" name="passw2" id="pswd2" placeholder="Confirm Password">
+                <input type="password" name="passw" id="pswd" placeholder="Password" required>
+                <label for="pswd2" class="ui-hidden-accessible" >Confirm Password:</label>
+                <input type="password" name="passw2" id="pswd2" placeholder="Confirm Password" required>
                 <input type="submit" action="" data-inline="true" value="Sign Up" name="submitbuttonsignup">
+                </fieldset>
             </form>
         </div>
         
@@ -270,23 +288,9 @@
          function validateSignUp() {
 
              //  validateForm function starts here
-             var username = document.forms["SignUpForm"]["usrnm"].value;
              var password1 = document.forms["SignUpForm"]["pswd"].value;
              var password2 = document.forms["SignUpForm"]["pswd2"].value;
-            //For some reason I cant get it to work in one if statement with lots of ORs
-                if (username==null || username==""){
-                    alert("Please fill out all fields");
-                    return false;
-                }
-                else if (password1==null || password1==""){
-                        alert("Please fill out all fields");
-                        return false;
-                }
-                else if (password2==null || password2==""){
-                        alert("Please fill out all fields");
-                        return false;
-                }
-                else if (password1 != password2){
+            if (password1 != password2){
                         alert("Passwords don't match")
                         return false;
                 }
