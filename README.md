@@ -7,6 +7,7 @@ Using Jquery, Javascript, PHP, CSS, HTML, MySQL
 4. Basic error checking for sign up and log in forms. Check if all fields are filled out when logging in or signing up. Check if username is already taken when signing up.
 5. Passwords are hashed before being entered into database using sha265
 6. Users can add friends and remove friends. Basic error checking included such as checking for invalid user names and checking if user is actually in friends list when trying to remove.
+7. Users can view friends they have added
 
 
 ### What needs to be done
