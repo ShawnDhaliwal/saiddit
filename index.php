@@ -49,6 +49,36 @@
                 VALUES ('$usernameValue','$userpasswordValuehash')";
             
                 if ($conn->query($sql) === TRUE) {
+                    $sql = "SELECT * FROM users WHERE username = '$usernameValue'";
+                    $result = mysqli_query($conn, $sql);
+                    $row = mysqli_fetch_assoc($result);
+                    if(mysqli_num_rows($result)==1){
+                        
+                        $user_id = $row["id"];
+                    }
+                    $sql = "SELECT * FROM subsaiddit WHERE is_default = 1";
+                    $result = mysqli_query($conn, $sql);
+                    $row = mysqli_fetch_assoc($result);
+
+                    if(mysqli_num_rows($result)>0){
+                        //subscribe new user to defualt subsaiddits
+                        $subscribedsubsaiddits = array();
+                        array_push($subscribedsubsaiddits, $row['id']);
+                        while($row = mysqli_fetch_assoc($result)) {
+                            array_push($subscribedsubsaiddits, $row['id']);
+                        }
+                        $x = 0;
+                        
+                        while($x < count($subscribedsubsaiddits)){
+                            
+                            $sql = "INSERT INTO subscribe (user_id, subsaiddit_id) VALUES ('$user_id','$subscribedsubsaiddits[$x]')";
+                            $result = mysqli_query($conn, $sql);
+                            $row = mysqli_fetch_assoc($result);
+                            $x++;
+         
+                        }
+
+                    }
                 ?> <script type="text/javascript">
                     swal("Registration Successful","","success");
                    </script>
@@ -56,8 +86,9 @@
                 } else {
                     echo "Error: " . $sql . "<br>" . $conn->error;
                 }
-            $conn->close();
             }
+            $conn->close();
+
         }
         /* if log in button is pressed, then this code will execute */
         if (isset($_POST['submitbuttonlogin'])){
@@ -217,6 +248,7 @@
                     <a class="navbar-brand" href="#">Hello <?php echo $_SESSION['username_in']?></a>
                 </div>
                 <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#mysubsaidditspopup" data-rel="popup">My Subsaiddits</a></li>
                     <li><a href="#friendspopup" data-rel="popup">View Friends</a></li>
                     <li><a href = "#addfriendspopup" data-rel="popup">Add Friend</a></li>
                     <li><a href = "#removefriendspopup" data-rel="popup">Remove Friend</a></li>
@@ -241,6 +273,41 @@
         </form>
         <?php } ?>
         <!-- This is the code for the log in pop up box that appears after clicking on log in-->
+        
+        <div data-role="popup" class = "ui-content" id="mysubsaidditspopup" style="min-width:250px;">
+                <h3>Subscribed Subsaiddits</h3>
+                <?php 
+                    include ("config.php");
+                    $user = $_SESSION['username_in'];
+                    $sql = "SELECT * FROM users WHERE username = '$user'";
+                    $result = mysqli_query($conn, $sql);
+                    $row = mysqli_fetch_assoc($result);
+                    $userid = $row["id"];
+
+                    $sql = "SELECT * FROM subscribe WHERE user_id = '$userid'";
+                    $result = mysqli_query($conn, $sql);
+                    $subscribesubsaidditids = array();
+                    //save friend id values into array
+                    while($row = mysqli_fetch_assoc($result)) {
+                        array_push($subscribesubsaidditids, $row['subsaiddit_id']);
+                    }
+                    
+                    $x = 0;
+                    while($x <count($subscribesubsaidditids)){
+                        
+                        $sql = "SELECT * FROM subsaiddit WHERE id = '$subscribesubsaidditids[$x]'";
+                        $result = mysqli_query($conn, $sql);
+                        $row = mysqli_fetch_assoc($result);
+                        $subsaidditname = $row["title"];
+                        echo "<li style='list-style-type: none;''>".$subsaidditname."</li>";
+                        $x++;        
+                    }
+                        
+            
+            
+                ?>
+        </div>
+        
         <div data-role="popup" class = "ui-content" id="LogInPopUp" style="min-width:250px;">
             <form name = "Loginform" method="post" action="" >
                 <h3>Login information</h3>
