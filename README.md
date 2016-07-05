@@ -10,6 +10,7 @@ Note: You will have to download and install sweetalert for this to run properly.
 6. Users can add friends and remove friends. Basic error checking included such as checking for invalid user names and checking if user is actually in friends list when trying to remove. User can not add a friend that is already added in their friends list
 7. Users can view friends they have added
 8. When a user signs up, they are automatically subscribed to the default subsaiddits
+9. Users can view the subsaiddits they are subscribed to
 
 
 ### What needs to be done
