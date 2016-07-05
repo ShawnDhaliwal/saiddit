@@ -16,4 +16,4 @@ Using Jquery, Javascript, PHP, CSS, HTML, MySQL
 3. Layout is buggy at some spots. You will notice this if you try to edit the style.css file.
 
 ### NOTE
-Bootsrap being considered for UI redesign.
+UI being redesigned using bootstrap. Should look much better.
