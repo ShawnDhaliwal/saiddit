@@ -1,5 +1,5 @@
 # saiddit
-Using Bootsrap, Jquery, Javascript, PHP, CSS, HTML, MySQL
+Using Bootstrap, Jquery, Javascript, PHP, CSS, HTML, MySQL
 ### What has been done
 1. UI layout using HTML, CSS, Jquery, and Bootstrap
 2. Sign up capability
