@@ -15,4 +15,5 @@ Using Jquery, Javascript, PHP, CSS, HTML, MySQL
 2. [NEEDS FIXING] Buttons need to be pressed twice for them to register. Sometimes page needs to be refreshed for   buttons to work.
 3. Layout is buggy at some spots. You will notice this if you try to edit the style.css file.
 
-
+### NOTE
+Bootsrap being considered for UI redesign.
