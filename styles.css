@@ -1,57 +1,81 @@
-html, body {
-    margin: 0;
-    padding: 0;
-}
+
 
 .header{
-    
     height: 50px;
     font-size: 50px;
-    background-color: #CEE3F9;
-    
-}
-
-.loginsignup{
-    background-color: #CEE3F9;
-    text-align: right;
-    padding-right: 10px;
-    margin-bottom: -20px;
-}
-
-#nav {
-    background-color: #F0F8FF;
-    border-bottom: solid #F0F8FF 2px;
-    height:38px;
 
 }
 
-#nav .default_subsaiddits {
+
+
+.friendslist{
+    height:90px; 
+    width:87%;
+    overflow:hidden; 
+    overflow-y:scroll;
+}
+
+.navbar {
+    margin-bottom: 0 !important;
+}
+
+
+.subsaidditNavigation {
     list-style-type: none;
-    margin-top: 0px;
+    margin: 0;
     padding: 0;
+    overflow: hidden;
+    background-color: #333;
 }
 
+.subsaidditNavigation li {
+    float: left;
+}
 
-#nav .subOption a {
-    padding: 10px;
+.subsaidditNavigation li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
     text-decoration: none;
-    font-weight: bold;
-    color: #4682B4;
-    background-color: #F0F8FF;
-    float: left
 }
 
-#nav .subOption a:hover {
-    background-color: white;
+/* Change the link color to #111 (black) on hover */
+.subsaidditNavigation li a:hover {
+    background-color: #111;
+    color: white;
 }
 
-.showing{
-    margin: 30px;
-    font-size: 20px;
+* {margin: 0; padding: 0;}
+
+div .posts {
+  margin: 20px;
 }
 
-.showing a{
-    
-  text-decoration: none;
+.posts {
+  list-style-type: none;
+  width: 1000px;
+}
 
+.posts h3 {
+  font: bold 20px/1.5 Helvetica, Verdana, sans-serif;
+}
+
+.posts li img {
+  float: left;
+  margin: 0 15px 0 0;
+}
+
+.posts li p {
+  font: 200 12px/1.5 Georgia, Times New Roman, serif;
+}
+
+.posts li {
+  padding: 10px;
+  overflow: auto;
+}
+
+.posts li:hover {
+  background: #eee;
+  cursor: pointer;
 }

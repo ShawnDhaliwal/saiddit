@@ -2,10 +2,12 @@
     session_start();
 ?>
 
-<html>
-    <head>
+<!DOCTYPE html>
+<html lang="en">
+
+    <head >
          
-        <title> Saiddit  </title>
+        <title > Saiddit  </title>
         <link rel="stylesheet" type="text/css" href="styles.css" />
         <link rel="stylesheet" type="text/css" href="sweetalert.css"/>
         <script src = "sweetalert.min.js"></script>
@@ -15,6 +17,9 @@
         <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
         <script src="http://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.min.js"></script>
         <script src="http://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.min.js"></script>
+          <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         
     </head>
     <body>
@@ -23,17 +28,14 @@
         /* if sign up button is pressed, then this code will execute */
         if (isset($_POST['submitbuttonsignup'])){
             include("config.php");
-
             $usernameValue = $_POST['user'];
             $userpasswordValue = $_POST['passw'];
             $userpasswordValuehash = hash('sha256', $userpasswordValue);
         
-
             $sql = "SELECT * FROM users WHERE username = '$usernameValue'";
             $result = mysqli_query($conn, $sql);
             
              /* Check if username is taken */
-
             if($result && mysqli_num_rows($result)>0){
             ?>
                 <script type="text/javascript">
@@ -55,12 +57,10 @@
                     echo "Error: " . $sql . "<br>" . $conn->error;
                 }
             $conn->close();
-
             }
         }
         /* if log in button is pressed, then this code will execute */
         if (isset($_POST['submitbuttonlogin'])){
-
             include("config.php");
  
             // username and password entered into form
@@ -196,27 +196,50 @@
                 
             }
         }
+        if(isset($_POST['submitbuttonlogout'])){
+            $_SESSION['loggedin'] = false;
+            unset($_SESSION["username_in"]);    
+        }
+
     ?> 
         
         <div class = "header">
             <input type="image" src=redditlogo.png height="65px" >Saiddit            
         </div>
         <!-- Determine if we should display "Log in or Sign up" or "Log out". Dependant on if user is loged in or not.-->
-        <div class = "loginsignup">
-            <?php 
-                if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) { ?>
-                    <form method = "post" action = "">
-                    <a href = "#friendspopup" data-rel="popup" data-inline="true" data-mini="true" data-role="button">Friends</a>
-                    <a href = "#addfriendspopup" data-rel="popup" data-inline="true" data-mini="true" data-role="button">Add Friends</a>
-                    <a href = "#removefriendspopup" data-rel="popup" data-inline="true" data-mini="true" data-role="button">Remove Friends</a>
-                    <input type="submit"  data-inline="true" data-mini="true" value="Log Out" name="submitbuttonlogout">
-                    </form>
-
-            <?php }else{?>
-                    Want to join us?<a href = "#LogInPopUp" data-role = "button" data-rel="popup" data-inline ="true" data-mini="true"> Log in</a> or <a href = "#SignUpPopUp" data-role = "button" data-rel="popup" data-mini="true" data-inline="true">Sign up</a>
-            <?php } ?>
-     </div>
-        
+        <br>
+        <?php
+        if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) { ?>
+        <form method = "post" action="">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Hello <?php echo $_SESSION['username_in']?></a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#friendspopup" data-rel="popup">View Friends</a></li>
+                    <li><a href = "#addfriendspopup" data-rel="popup">Add Friend</a></li>
+                    <li><a href = "#removefriendspopup" data-rel="popup">Remove Friend</a></li>
+                    <li><a href = "#LogOutPopUp" data-rel="popup">Log Out</a></li>
+                </ul>
+            </div>
+        </nav>
+        </form>
+        <?php } else { ?>
+            <form method = "post" action="">
+            <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Welcome</a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#SignUpPopUp" data-rel="popup">Sign Up</a></li>
+                    <li><a href = "#LogInPopUp" data-rel="popup">Log In</a></li>
+                </ul>
+            </div>
+        </nav>
+        </form>
+        <?php } ?>
         <!-- This is the code for the log in pop up box that appears after clicking on log in-->
         <div data-role="popup" class = "ui-content" id="LogInPopUp" style="min-width:250px;">
             <form name = "Loginform" method="post" action="" >
@@ -226,6 +249,14 @@
                 <label for="pswd" class="ui-hidden-accessible">Password:</label>
                 <input type="password" name="passwl" id="pswd" placeholder="Password" required>
                 <input type="submit" action = "" data-inline="true" value="Log in" name = "submitbuttonlogin">
+            </form>
+        </div>
+        
+        <div data-role="popup" class = "ui-content" id="LogOutPopUp" style="min-width:250px;">
+            <form name = "LogOutform" method="post" action="" >
+                <h3>Are you sure?</h3>
+                <input type="submit" action = "" data-inline="true" value="Yes" name = "submitbuttonlogout">
+                <input type="submit" action = "" data-inline="true" value="Cancel" name = "cancelbuttonlogout">
             </form>
         </div>
         
@@ -289,9 +320,6 @@
             </ul>
         </div>
 
-        
-
-
         <!-- This code is for the sign up pop box that appears after clicking on sign up-->
         <div data-role="popup" class = "ui-content" id="SignUpPopUp" style="min-width:250px;">
             <form name = "SignUpForm" method="post" onsubmit=" return validateSignUp()">
@@ -311,7 +339,6 @@
         <script type="text/javascript">
             /* This code executes when sign up button is pressed in the pop up box. It checks to see if confirm password and password fields match, and if all fields are filled in */
          function validateSignUp() {
-
              //  validateForm function starts here
              var password1 = document.forms["SignUpForm"]["pswd"].value;
              var password2 = document.forms["SignUpForm"]["pswd2"].value;
@@ -319,43 +346,78 @@
                         swal("Error","Passwords don't match","error")
                         return false;
                 }
-
          }
         </script>
-  
-            
-        <!-- The horizontal menu -->
-        <div id = "nav">
-        <ul class = "default_subsaiddits">
-            <li class = "subOption"><a href ="#">HOME</a></li>
-            <li class = "subOption"><a href ="#">FUNNY</a></li>
-            <li class = "subOption"><a href ="#">PICS</a></li>
-            <li class = "subOption"><a href ="#">SHOWERTHOUGHTS</a></li>
-            <li class = "subOption"><a href ="#">VIDEOS</a></li>
-            <li class = "subOption"><a href ="#">AWW</a></li>
-            <li class = "subOption"><a href ="#">GAMING</a></li>
-            <li class = "subOption"><a href ="#">NEWS</a></li>
-            <li class = "subOption"><a href ="#">MOVIES</a></li>
-
+        <ul class="subsaidditNavigation">
+            <li><a href="#">HOME</a></li>
+            <li><a href="#">NEWS</a></li>
+            <li><a href="#">DOGS</a></li>
+            <li><a href="#">CATS</a></li>
+            <li><a href="#">FUNNY</a></li>
+            <li><a href="#">GIFS</a></li>
+            <li><a href="#">MEMES</a></li>
+            <li><a href="#">SHOCKING</a></li>
+            <li><a href="#">VIDEOS</a></li>
+            <li><a href="#">MOVIES</a></li>
+            <li><a href="#">GAMING</a></li>
+            <li><a href="#">SHOWERTHOUGHTS</a></li>
 
         </ul>
-        </div>
-        <!-- This links-->
-        <div>
-        <ol type="1" >
-            <li class = "showing"><a href ="#">Cat throws dog off of roof!</a></li>
-            <li class = "showing"><a href ="#">Some more cat memes</a></li>
-            <li class = "showing"><a href ="#">UK Votes to Seperate from EU</a></li>
-            <li class = "showing"><a href ="#">Cavs win first championship</a></li>
-            <li class = "showing"><a href ="#">How to tie a shoe, the fast way</a></li>
-            <li class = "showing"><a href ="#">Kids arguing about stuff</a></li>
-            <li class = "showing"><a href ="#">Instant karma</a></li>
-            <li class = "showing"><a href ="#">Why do we have a pink toe?</a></li>
-            <li class = "showing"><a href ="#">Gravitational waves detected, AGAIN</a></li>
-            <li class = "showing"><a href ="#">MEMES ALL DAY EVERYDAY</a></li>
-
-        </ol>
-        </div>
+        <ul class = "posts">
+            <li>
+                <a href="#">
+                <img src="http://lorempixum.com/100/100/nature/1" />
+                <h3>Headline</h3>
+                </a>
+                <p>Some text...</p>
+            </li>
+      
+            <li>
+                <a href ="#">
+                <img src="http://lorempixum.com/100/100/nature/2" />
+                <h3>Headline</h3>
+                </a>
+                <p>Some text...</p>
+            </li>
+ 
+            <li>
+                <a href="#">
+                <img src="http://lorempixum.com/100/100/nature/3" />
+                <h3>Headline</h3>
+                </a>
+                <p>Some text...</p>
+            </li>
+ 
+            <li>
+                <a href="#">
+                <img src="http://lorempixum.com/100/100/nature/4" />
+                <h3>Headline</h3>
+                </a>
+                <p>Some text...</p>
+            </li>
+            <li>
+                <a href="#">
+                <img src="http://lorempixum.com/100/100/nature/5" />
+                <h3>Headline</h3>
+                </a>
+                <p>Some text...</p>
+            </li>
+            <li>
+                <a href="#">
+                <img src="http://lorempixum.com/100/100/nature/6" />
+                <h3>Headline</h3>
+                </a>
+                <p>Some text...</p>
+            </li>
+            <li>
+                <a href="#">
+                <img src="http://lorempixum.com/100/100/nature/7" />
+                <h3>Headline</h3>
+                <p>Some text...</p>
+                </a>
+            </li>
+        </ul>
+  
 
         
     </body>
