@@ -47,6 +47,10 @@
                 VALUES ('$usernameValue','$userpasswordValuehash')";
             
                 if ($conn->query($sql) === TRUE) {
+                ?> <script type="text/javascript">
+                    swal("Registration Successful","","success");
+                   </script>
+                <?php
                 } else {
                     echo "Error: " . $sql . "<br>" . $conn->error;
                 }
@@ -59,7 +63,7 @@
 
             include("config.php");
  
-            // username and password sent from form 
+            // username and password entered into form
             $myusername=$_POST['userl']; 
             $mypassword=$_POST['passwl']; 
             $mypasswordhash = hash('sha256', $mypassword);
@@ -91,38 +95,52 @@
         }
     /* if add friend button is pressed. This adds the friend to the friends table in mysql */
         if(isset($_POST['addfriendsubmit'])){
-            
+            //Get userid of logged in user
             include("config.php");
             $user = $_SESSION['username_in'];
             $sql="SELECT * FROM users WHERE username='$user'";
             $result=mysqli_query($conn, $sql);
             $row = mysqli_fetch_assoc($result);
             $userid = $row["id"];
-
+            //get the id of the friend the user is adding
             $addfriend = ($_POST['addfriendl']);
             $sql="SELECT * FROM users WHERE username='$addfriend'";
             $result=mysqli_query($conn, $sql);
             $row = mysqli_fetch_assoc($result);
+            //if id of the friend the user is trying to add is found
             if(mysqli_num_rows($result) == 1){
                 $friendid = $row["id"];
-                $sql = "INSERT INTO friends (user_id, friend_id)
+                $sql="SELECT * FROM friends WHERE user_id='$userid' AND friend_id ='$friendid'";
+                $result = mysqli_query($conn, $sql);
+                $row = mysqli_fetch_assoc($result);
+                //if user is already added
+                if(mysqli_num_rows($result) == 1){
+                    ?>
+                    <script type = "text/javascript">
+                    swal("Oops","Friend is already added","error");
+                    </script>
+                    <?php
+                } else{
+                    //$row["id"] is the id of the user we found through the query. 
+                    $sql = "INSERT INTO friends (user_id, friend_id)
                     VALUES ('$userid','$friendid')";
                 
-                if ($conn->query($sql) === TRUE) {
-                ?>
+                    if ($conn->query($sql) === TRUE) {
+                    ?>
                     <script type ="text/javascript">
                         swal("Success","User is now your friend","success");
                     </script>
-                <?php
-                } else {
-                 ?>
+                    <?php
+                    } else {
+                    ?>
                     <script type ="text/javascript">
                         swal("Error","Something went wrong","error");
                     </script>
-                <?php
-                }
+                    <?php
+                    }
          
-            $conn->close();
+                    $conn->close();
+                }
             } else {
                 ?>
                 <script type="text/javascript">
@@ -132,22 +150,22 @@
                 
             }
         }
-        
+        //if remvoe friend submit button is pressed 
         if(isset($_POST['removefriendsubmit'])){
-            
+            //get current loged in user id
             include("config.php");
             $user = $_SESSION['username_in'];
             $sql="SELECT * FROM users WHERE username='$user'";
             $result=mysqli_query($conn, $sql);
             $row = mysqli_fetch_assoc($result);
             $userid = $row["id"];
-
+            //get the id of the friend the user is trying to remove
             $removefriend = ($_POST['removefriendl']);
             $sql="SELECT * FROM users where username='$removefriend'";
             $result=mysqli_query($conn, $sql);
             $row = mysqli_fetch_assoc($result);
             $removefriendid = $row["id"];
-            
+            //get the data from the friends table
             $sql="SELECT * FROM friends WHERE user_id='$userid' AND friend_id = '$removefriendid'";
             $result=mysqli_query($conn, $sql);
             $row = mysqli_fetch_assoc($result);
@@ -233,27 +251,31 @@
             <ul class = "friendslist">
                 <?php
                     include("config.php");
+                    //get current loged in user id
                     $user = $_SESSION['username_in'];
                     $sql="SELECT * FROM users where username='$user'";
                     $result=mysqli_query($conn, $sql);
                     $row = mysqli_fetch_assoc($result);
                     $userid = $row["id"];
-                
+                    //get all their friends from friends table
                     $sql ="SELECT * FROM friends where user_id='$userid'";
                     $result=mysqli_query($conn,$sql);
                     $friendids = array();
+                    //save friend id values into array
                     while($row = mysqli_fetch_assoc($result)) {
                         array_push($friendids, $row['friend_id']);
                     }
-                    
+                    //count friends
                     $totalfriends = count($friendids);
                     if($totalfriends == 0){
                         
                         echo"No Friends";
                     }
                     $x = 0;
+                    //go through array and display on page their friends name
                     while($x<$totalfriends){
                         $idfriend = $friendsids[$x];
+                        //get friends username from their id
                         $sql = "SELECT * FROM users WHERE id ='$friendids[$x]'";
                         $result = mysqli_query($conn, $sql);
                         $row = mysqli_fetch_assoc($result);
