@@ -1,5 +1,6 @@
 # saiddit
 Using Bootstrap, Jquery, Javascript, PHP, CSS, HTML, MySQL
+Note: You will have to download and install sweetalert for this to run properly.
 ### What has been done
 1. UI layout using HTML, CSS, Jquery, and Bootstrap
 2. Sign up capability
