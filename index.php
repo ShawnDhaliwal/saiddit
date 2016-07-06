@@ -17,12 +17,22 @@
         <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
         <script src="http://cdn.jsdelivr.net/jquery.validation/1.15.0/jquery.validate.min.js"></script>
         <script src="http://cdn.jsdelivr.net/jquery.validation/1.15.0/additional-methods.min.js"></script>
-          <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <!-- I have no idea what this function does but jquery tabs needs it-->
+        <script>
+            $(function() {
+            $( "#tabs" ).tabs();
+        });
+        </script>
         
     </head>
     <body>
+        
 
     <?php
         /* if sign up button is pressed, then this code will execute */
@@ -124,6 +134,7 @@
             unset($_SESSION["username_in"]); 
             
         }
+        
     /* if add friend button is pressed. This adds the friend to the friends table in mysql */
         if(isset($_POST['addfriendsubmit'])){
             //Get userid of logged in user
@@ -227,10 +238,6 @@
                 
             }
         }
-        if(isset($_POST['submitbuttonlogout'])){
-            $_SESSION['loggedin'] = false;
-            unset($_SESSION["username_in"]);    
-        }
 
     ?> 
         
@@ -248,7 +255,8 @@
                     <a class="navbar-brand" href="#">Hello <?php echo $_SESSION['username_in']?></a>
                 </div>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#mysubsaidditspopup" data-rel="popup">My Subsaiddits</a></li>
+                    <li><a href="#allsubsaidditspopup" data-rel="popup">All Subsaiddits</a></li>
+                    <li><a href="#mysubsaidditspopup" data-rel="popup">Subscribed</a></li>
                     <li><a href="#friendspopup" data-rel="popup">View Friends</a></li>
                     <li><a href = "#addfriendspopup" data-rel="popup">Add Friend</a></li>
                     <li><a href = "#removefriendspopup" data-rel="popup">Remove Friend</a></li>
@@ -265,6 +273,7 @@
                     <a class="navbar-brand" href="#">Welcome</a>
                 </div>
                 <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#allsubsaidditspopup" data-rel="popup">All Subsaiddits</a></li>
                     <li><a href="#SignUpPopUp" data-rel="popup">Sign Up</a></li>
                     <li><a href = "#LogInPopUp" data-rel="popup">Log In</a></li>
                 </ul>
@@ -272,8 +281,25 @@
         </nav>
         </form>
         <?php } ?>
-        <!-- This is the code for the log in pop up box that appears after clicking on log in-->
         
+        <div data-role="popup" class = "ui-content" id="allsubsaidditspopup" style="min-width:250px;">
+                <h3>All Subsaiddits</h3>
+                <?php 
+                    include ("config.php");
+                    $sql = "SELECT * FROM subsaiddit";
+                    $result = mysqli_query($conn, $sql);
+                    //save friend id values into array
+                    while($row = mysqli_fetch_assoc($result)) {
+                        $saidditname = $row["title"];
+                        echo "<li style='list-style-type: none;''><a href='#'>".$saidditname."</a></li>";
+                    }
+                    
+
+            
+                ?>
+            
+        </div>
+
         <div data-role="popup" class = "ui-content" id="mysubsaidditspopup" style="min-width:250px;">
                 <h3>Subscribed Subsaiddits</h3>
                 <?php 
@@ -299,7 +325,7 @@
                         $result = mysqli_query($conn, $sql);
                         $row = mysqli_fetch_assoc($result);
                         $subsaidditname = $row["title"];
-                        echo "<li style='list-style-type: none;''>".$subsaidditname."</li>";
+                        echo "<li style='list-style-type: none;''><a href='#'>".$subsaidditname."</a></li>";
                         $x++;        
                     }
                         
@@ -415,75 +441,133 @@
                 }
          }
         </script>
-        <ul class="subsaidditNavigation">
-            <li><a href="#">HOME</a></li>
-            <li><a href="#">NEWS</a></li>
-            <li><a href="#">DOGS</a></li>
-            <li><a href="#">CATS</a></li>
-            <li><a href="#">FUNNY</a></li>
-            <li><a href="#">GIFS</a></li>
-            <li><a href="#">MEMES</a></li>
-            <li><a href="#">SHOCKING</a></li>
-            <li><a href="#">VIDEOS</a></li>
-            <li><a href="#">MOVIES</a></li>
-            <li><a href="#">GAMING</a></li>
-            <li><a href="#">SHOWERTHOUGHTS</a></li>
-
-        </ul>
-        <ul class = "posts">
-            <li>
-                <a href="#">
-                <img src="http://lorempixum.com/100/100/nature/1" />
-                <h3>Headline</h3>
-                </a>
-                <p>Some text...</p>
-            </li>
+        
+        <div id = "tabs">
+            <ul>
+                <li><a href="#tabs-1">HOME</a></li>
+                <li><a href="#tabs-2">NEWS</a></li>
+                <li><a href="#tabs-3">DOGS</a></li>
+                <li><a href="#tabs-4">CATS</a></li>
+                <li><a href="#tabs-5">FUNNY</a></li>
+                <li><a href="#tabs-6">GIFS</a></li>
+                <li><a href="#tabs-7">MEMES</a></li>
+                <li><a href="#tabs-8">SHOCKING</a></li>
+                <li><a href="#tabs-9">VIDEOS</a></li>
+                <li><a href="#tabs-10">MOVIES</a></li>
+                <li><a href="#tabs-11">GAMING</a></li>
+            </ul>
+            <div id="tabs-1">
+                 <ul class = "posts">
+                    <h1>ALL</h1>
+                    <li>
+                        <a href="#">
+                        <img src="http://lorempixum.com/100/100/nature/1" />
+                        <h3>Headline</h3>
+                        </a>
+                        <p>Some text...</p>
+                     </li>
       
-            <li>
-                <a href ="#">
-                <img src="http://lorempixum.com/100/100/nature/2" />
-                <h3>Headline</h3>
-                </a>
-                <p>Some text...</p>
-            </li>
+                    <li>
+                        <a href ="#">
+                        <img src="http://lorempixum.com/100/100/nature/2" />
+                        <h3>Headline</h3>
+                        </a>
+                        <p>Some text...</p>
+                    </li>
  
-            <li>
-                <a href="#">
-                <img src="http://lorempixum.com/100/100/nature/3" />
-                <h3>Headline</h3>
-                </a>
-                <p>Some text...</p>
-            </li>
+                    <li>
+                        <a href="#">
+                        <img src="http://lorempixum.com/100/100/nature/3" />
+                        <h3>Headline</h3>
+                        </a>
+                        <p>Some text...</p>
+                    </li>
  
-            <li>
-                <a href="#">
-                <img src="http://lorempixum.com/100/100/nature/4" />
-                <h3>Headline</h3>
-                </a>
-                <p>Some text...</p>
-            </li>
-            <li>
-                <a href="#">
-                <img src="http://lorempixum.com/100/100/nature/5" />
-                <h3>Headline</h3>
-                </a>
-                <p>Some text...</p>
-            </li>
-            <li>
-                <a href="#">
-                <img src="http://lorempixum.com/100/100/nature/6" />
-                <h3>Headline</h3>
-                </a>
-                <p>Some text...</p>
-            </li>
-            <li>
-                <a href="#">
-                <img src="http://lorempixum.com/100/100/nature/7" />
-                <h3>Headline</h3>
-                <p>Some text...</p>
-                </a>
-            </li>
-        </ul>
+                    <li>
+                        <a href="#">
+                        <img src="http://lorempixum.com/100/100/nature/4" />
+                        <h3>Headline</h3>
+                        </a>
+                        <p>Some text...</p>
+                    </li>
+                    <li>
+                        <a href="#">
+                        <img src="http://lorempixum.com/100/100/nature/5" />
+                        <h3>Headline</h3>
+                        </a>
+                        <p>Some text...</p>
+                    </li>
+                    <li>
+                        <a href="#">
+                        <img src="http://lorempixum.com/100/100/nature/6" />
+                        <h3>Headline</h3>
+                        </a>
+                        <p>Some text...</p>
+                    </li>
+                    <li>
+                        <a href="#">
+                        <img src="http://lorempixum.com/100/100/nature/7" />
+                        <h3>Headline</h3>
+                        <p>Some text...</p>
+                        </a>
+                    </li>
+                </ul>
+            
+            </div>
+            <div id="tabs-2">
+                <ul class = "posts">
+                     <h1>NEWS</h1>
+                </ul>
+            </div>
+            <div id="tabs-3">
+                <ul class = "posts">
+                    <h1>DOGS</h1>
+                </ul>
+            </div>            
+            <div id="tabs-4">
+                <ul class = "posts">
+                    <h1>CATS</h1>
+                </ul>
+            </div>            
+            <div id="tabs-5">
+                <ul class = "posts">
+                    <h1>FUNNY</h1>
+                </ul>
+            </div>            
+            <div id="tabs-6">
+                <ul class = "posts">
+                    <h1>GIFS</h1>
+                </ul>
+            </div>            
+            <div id="tabs-7">
+                <ul class = "posts">
+                    <h1>MEMES</h1>
+                </ul>
+            </div>            
+            <div id="tabs-8">
+                <ul class = "posts">
+                    <h1>SHOCKING</h1>
+                </ul>
+            </div>            
+            <div id="tabs-9">
+                <ul class = "posts">
+                    <h1>VIDEOS</h1>
+                </ul>
+            </div>            
+            <div id="tabs-10">
+                <ul class = "posts">
+                    <h1>MOVIES</h1>
+                </ul>
+            </div>            
+            <div id="tabs-11">
+                <ul class = "posts">
+                    <h1>GAMING</h1>
+                </ul>
+            </div>
+            
+        </div>
+        
+       
   
 
         
