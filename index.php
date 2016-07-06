@@ -1,3 +1,4 @@
+
 <?php
     session_start();
 ?>
@@ -20,9 +21,7 @@
         <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
         <!-- I have no idea what this function does but jquery tabs needs it-->
         <script>
             $(function() {
@@ -69,7 +68,6 @@
                     $sql = "SELECT * FROM subsaiddit WHERE is_default = 1";
                     $result = mysqli_query($conn, $sql);
                     $row = mysqli_fetch_assoc($result);
-
                     if(mysqli_num_rows($result)>0){
                         //subscribe new user to defualt subsaiddits
                         $subscribedsubsaiddits = array();
@@ -87,7 +85,6 @@
                             $x++;
          
                         }
-
                     }
                 ?> <script type="text/javascript">
                     swal("Registration Successful","","success");
@@ -98,7 +95,6 @@
                 }
             }
             $conn->close();
-
         }
         /* if log in button is pressed, then this code will execute */
         if (isset($_POST['submitbuttonlogin'])){
@@ -238,7 +234,6 @@
                 
             }
         }
-
     ?> 
         
         <div class = "header">
@@ -294,7 +289,6 @@
                         echo "<li style='list-style-type: none;''><a href='#'>".$saidditname."</a></li>";
                     }
                     
-
             
                 ?>
             
@@ -309,7 +303,6 @@
                     $result = mysqli_query($conn, $sql);
                     $row = mysqli_fetch_assoc($result);
                     $userid = $row["id"];
-
                     $sql = "SELECT * FROM subscribe WHERE user_id = '$userid'";
                     $result = mysqli_query($conn, $sql);
                     $subscribesubsaidditids = array();
@@ -442,131 +435,73 @@
          }
         </script>
         
-        <div id = "tabs">
-            <ul>
-                <li><a href="#tabs-1">HOME</a></li>
-                <li><a href="#tabs-2">NEWS</a></li>
-                <li><a href="#tabs-3">DOGS</a></li>
-                <li><a href="#tabs-4">CATS</a></li>
-                <li><a href="#tabs-5">FUNNY</a></li>
-                <li><a href="#tabs-6">GIFS</a></li>
-                <li><a href="#tabs-7">MEMES</a></li>
-                <li><a href="#tabs-8">SHOCKING</a></li>
-                <li><a href="#tabs-9">VIDEOS</a></li>
-                <li><a href="#tabs-10">MOVIES</a></li>
-                <li><a href="#tabs-11">GAMING</a></li>
+        <div class="container-fluid">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#home">HOME</a></li>
+                <li><a data-toggle="tab" href="#tabs-1">NEWS</a></li>
+                <li><a data-toggle="tab" href="#tabs-2">DOGS</a></li>
+                <li><a data-toggle="tab" href="#tabs-3">CATS</a></li>
+                <li><a data-toggle="tab" href="#tabs-4">FUNNY</a></li>
+                <li><a data-toggle="tab" href="#tabs-5">GIFS</a></li>
+                <li><a data-toggle="tab" href="#tabs-6">MEMES</a></li>
+                <li><a data-toggle="tab" href="#tabs-7">SHCOKING</a></li>
+                <li><a data-toggle="tab" href="#tabs-8">VIDEOS</a></li>
+                <li><a data-toggle="tab" href="#tabs-9">MOVIES</a></li>
+                <li><a data-toggle="tab" href="#tabs-10">GAMING</a></li>
+                <li><a data-toggle="tab" href="#tabs-11">SCARY</a></li>
             </ul>
-            <div id="tabs-1">
-                 <ul class = "posts">
-                    <h1>ALL</h1>
-                    <li>
-                        <a href="#">
-                        <img src="http://lorempixum.com/100/100/nature/1" />
-                        <h3>Headline</h3>
-                        </a>
-                        <p>Some text...</p>
-                     </li>
+
+            <div class="tab-content">
+                <div id="home" class="tab-pane fade in active">
+                    <h3>HOME</h3>
+                </div>
+                
+                <div id="tabs-1" class="tab-pane fade">
+                    <h3>NEWS</h3> 
+                </div>
+                
+                <div id="tabs-2" class="tab-pane fade">
+                    <h3>DOGS</h3> 
+                </div>
+                
+                <div id="tabs-3" class="tab-pane fade">
+                    <h3>CATS</h3> 
+                </div>
+                
+                <div id="tabs-4" class="tab-pane fade">
+                    <h3>FUNNY</h3>  
+                </div>
+                
+                <div id="tabs-5" class="tab-pane fade">
+                    <h3>GIFS</h3>  
+                </div>
+                
+                <div id="tabs-6" class="tab-pane fade">
+                    <h3>MEMES</h3>
+                </div>
+                
+                <div id="tabs-7" class="tab-pane fade">
+                    <h3>SHOCKING</h3>
+                </div>
+                
+                <div id="tabs-8" class="tab-pane fade">
+                    <h3>VIDEOS</h3>  
+                </div>
+                
+                <div id="tabs-9" class="tab-pane fade">
+                    <h3>MOVIES</h3>
+                </div>
+                
+                <div id="tabs-10" class="tab-pane fade">
+                    <h3>GAMING</h3>  
+                </div>
       
-                    <li>
-                        <a href ="#">
-                        <img src="http://lorempixum.com/100/100/nature/2" />
-                        <h3>Headline</h3>
-                        </a>
-                        <p>Some text...</p>
-                    </li>
- 
-                    <li>
-                        <a href="#">
-                        <img src="http://lorempixum.com/100/100/nature/3" />
-                        <h3>Headline</h3>
-                        </a>
-                        <p>Some text...</p>
-                    </li>
- 
-                    <li>
-                        <a href="#">
-                        <img src="http://lorempixum.com/100/100/nature/4" />
-                        <h3>Headline</h3>
-                        </a>
-                        <p>Some text...</p>
-                    </li>
-                    <li>
-                        <a href="#">
-                        <img src="http://lorempixum.com/100/100/nature/5" />
-                        <h3>Headline</h3>
-                        </a>
-                        <p>Some text...</p>
-                    </li>
-                    <li>
-                        <a href="#">
-                        <img src="http://lorempixum.com/100/100/nature/6" />
-                        <h3>Headline</h3>
-                        </a>
-                        <p>Some text...</p>
-                    </li>
-                    <li>
-                        <a href="#">
-                        <img src="http://lorempixum.com/100/100/nature/7" />
-                        <h3>Headline</h3>
-                        <p>Some text...</p>
-                        </a>
-                    </li>
-                </ul>
-            
+                <div id="tabs-11" class="tab-pane fade">
+                    <h3>SCARY</h3>
+                </div>
+      
             </div>
-            <div id="tabs-2">
-                <ul class = "posts">
-                     <h1>NEWS</h1>
-                </ul>
-            </div>
-            <div id="tabs-3">
-                <ul class = "posts">
-                    <h1>DOGS</h1>
-                </ul>
-            </div>            
-            <div id="tabs-4">
-                <ul class = "posts">
-                    <h1>CATS</h1>
-                </ul>
-            </div>            
-            <div id="tabs-5">
-                <ul class = "posts">
-                    <h1>FUNNY</h1>
-                </ul>
-            </div>            
-            <div id="tabs-6">
-                <ul class = "posts">
-                    <h1>GIFS</h1>
-                </ul>
-            </div>            
-            <div id="tabs-7">
-                <ul class = "posts">
-                    <h1>MEMES</h1>
-                </ul>
-            </div>            
-            <div id="tabs-8">
-                <ul class = "posts">
-                    <h1>SHOCKING</h1>
-                </ul>
-            </div>            
-            <div id="tabs-9">
-                <ul class = "posts">
-                    <h1>VIDEOS</h1>
-                </ul>
-            </div>            
-            <div id="tabs-10">
-                <ul class = "posts">
-                    <h1>MOVIES</h1>
-                </ul>
-            </div>            
-            <div id="tabs-11">
-                <ul class = "posts">
-                    <h1>GAMING</h1>
-                </ul>
-            </div>
-            
         </div>
-        
        
   
 
