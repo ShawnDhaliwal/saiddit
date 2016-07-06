@@ -20,3 +20,5 @@ Note: You will have to download and install sweetalert for this to run properly.
 3. Layout is buggy at some spots. You will notice this if you try to edit the style.css file.
 
 
+NOTE
+Considering to replace jquery mobile with simple jquery, for obvious reasons.
