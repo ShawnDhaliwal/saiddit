@@ -11,6 +11,7 @@ Note: You will have to download and install sweetalert for this to run properly.
 7. Users can view friends they have added
 8. When a user signs up, they are automatically subscribed to the default subsaiddits
 9. Users can view a list of subsaiddits they are subscribed to
+10. Basic design of subsaiddit pages. Subsaiddits still need to be filled. Should be done soon.
 
 
 ### What needs to be done
