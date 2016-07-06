@@ -21,5 +21,4 @@ Note: You will have to download and install sweetalert for this to run properly.
 4. [FIXED] A list of all subsaiddits appears between the navigation bar and tabs. Not good. Can't figure out why, makes no sense. This list should only appear in a popup. LESSON LEARNED: NEVER USE JQUERY MOBILE FOR WEB BOWSER, BUT TOO LATE NOW WE KEEP IT 
 
 
-NOTE
-Considering to replace jquery mobile with simple jquery, for obvious reasons.
+
