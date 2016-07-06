@@ -49,7 +49,7 @@
             if($result && mysqli_num_rows($result)>0){
             ?>
                 <script type="text/javascript">
-                    swal("Sorry","Username already taken","error"); 
+                    swal("Registration Failed","Username already taken","error"); 
                 </script>
             <?php
             
@@ -189,6 +189,36 @@
                 
             }
         }
+        
+        if(isset($_POST['createsubsaiddit'])){
+                include("config.php");
+                $user = $_SESSION['username_in'];
+                $subsaiddit_title = ($_POST['subsaidditTitle']);
+                $subsaiddit_desc = ($_POST['desc']);
+            
+                $sql = "INSERT INTO subsaiddit (title, description,creator)
+                VALUES ('$subsaiddit_title','$subsaiddit_desc','$user')";
+                $result = mysqli_query($conn, $sql);
+                $row = mysqli_fetch_assoc($result);
+                
+                $sql="SELECT * FROM users WHERE username='$user'";
+                $result=mysqli_query($conn, $sql);
+                $row = mysqli_fetch_assoc($result);
+                $userid = $row["id"];
+            
+                $sql="SELECT * FROM subsaiddit WHERE title='$subsaiddit_title'";
+                $result=mysqli_query($conn, $sql);
+                $row = mysqli_fetch_assoc($result);
+                $subsaidditid = $row["id"];
+            
+                $sql = "INSERT INTO subscribe (user_id, subsaiddit_id)
+                VALUES ('$userid','$subsaidditid')";
+                $result = mysqli_query($conn, $sql);
+                $row = mysqli_fetch_assoc($result);
+                
+
+        }
+        
         //if remvoe friend submit button is pressed 
         if(isset($_POST['removefriendsubmit'])){
             //get current loged in user id
@@ -253,6 +283,7 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#allsubsaidditspopup" data-rel="popup">All Subsaiddits</a></li>
                     <li><a href="#mysubsaidditspopup" data-rel="popup">Subscribed</a></li>
+                    <li><a href="#createmysubsaidditspopup" data-rel="popup">Create Subsaiddit</a></li>
                     <li><a href="#friendspopup" data-rel="popup">View Friends</a></li>
                     <li><a href = "#addfriendspopup" data-rel="popup">Add Friend</a></li>
                     <li><a href = "#removefriendspopup" data-rel="popup">Remove Friend</a></li>
@@ -277,7 +308,18 @@
         </nav>
         </form>
         <?php } ?>
-        
+        <div data-role="popup" class = "ui-content" id="createmysubsaidditspopup" style="min-width:250px;">
+            
+             <form name = "SubsaidditForm" method="post" action="" >
+                <h3>Subsaiddit information</h3>
+                <label for="subsaidditTitle" class="ui-hidden-accessible">Title:</label>
+                <input type="text" name="subsaidditTitle" id="subsaidditTitle" placeholder="Title" required>
+                <label for="desc" class="ui-hidden-accessible">Description:</label>
+                <textarea cols="40" rows="5" name="desc" id="desc" placeholder = "Short description.."></textarea>
+                <input type="submit" action = "" data-inline="true" value="Create" name = "createsubsaiddit">
+            </form>
+            
+        </div>
         <div data-role="popup" class = "ui-content" id="allsubsaidditspopup" style="min-width:250px;">
                 <h3>All Subsaiddits</h3>
                 <?php 
@@ -287,7 +329,13 @@
                     //save friend id values into array
                     while($row = mysqli_fetch_assoc($result)) {
                         $saidditname = $row["title"];
+                        $isdefault = $row["is_default"];
+                        if($isdefault == 0){
+                        echo "<li style='list-style-type: none;''><a href='#'style = 'color: black'>".$saidditname."</a></li>";
+                        }
+                        else{
                         echo "<li style='list-style-type: none;''><a href='#'>".$saidditname."</a></li>";
+                        }
                     }
                     
             
@@ -319,7 +367,12 @@
                         $result = mysqli_query($conn, $sql);
                         $row = mysqli_fetch_assoc($result);
                         $subsaidditname = $row["title"];
-                        echo "<li style='list-style-type: none;''><a href='#'>".$subsaidditname."</a></li>";
+                        $isdefault = $row["is_default"];
+                        if($isdefault == 0){
+                        echo "<li style='list-style-type: none;'><a href='#'style = 'color:black'>".$subsaidditname."</a></li>";
+                        }else{
+                        echo "<li style='list-style-type: none;'><a href='#'>".$subsaidditname."</a></li>";
+                        }
                         $x++;        
                     }
                         
@@ -366,7 +419,6 @@
         <div data-role="popup" class = "ui-content" id="friendspopup" style="min-width:250px;">
               <h3>Your Friends</h3>
 
-            <ul class = "friendslist">
                 <?php
                     include("config.php");
                     //get current loged in user id
@@ -398,13 +450,12 @@
                         $result = mysqli_query($conn, $sql);
                         $row = mysqli_fetch_assoc($result);
                         $friendname = $row["username"];
-                        echo "<li style='list-style-type: none;''>".$friendname."</li>";
+                        echo "<li style='list-style-type: none;'><a href='#'>".$friendname."</a></li>";
                         $x++;        
                     }     
                 
                 ?>
 
-            </ul>
         </div>
 
         <!-- This code is for the sign up pop box that appears after clicking on sign up-->
@@ -430,7 +481,7 @@
              var password1 = document.forms["SignUpForm"]["pswd"].value;
              var password2 = document.forms["SignUpForm"]["pswd2"].value;
             if (password1 != password2){
-                        swal("Error","Passwords don't match","error")
+                        swal("Registration Failed","Passwords don't match","error")
                         return false;
                 }
          }
@@ -438,69 +489,47 @@
         
         <div class="container-fluid">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#home">HOME</a></li>
-                <li><a data-toggle="tab" href="#tabs-1">NEWS</a></li>
-                <li><a data-toggle="tab" href="#tabs-2">DOGS</a></li>
-                <li><a data-toggle="tab" href="#tabs-3">CATS</a></li>
-                <li><a data-toggle="tab" href="#tabs-4">FUNNY</a></li>
-                <li><a data-toggle="tab" href="#tabs-5">GIFS</a></li>
-                <li><a data-toggle="tab" href="#tabs-6">MEMES</a></li>
-                <li><a data-toggle="tab" href="#tabs-7">SHCOKING</a></li>
-                <li><a data-toggle="tab" href="#tabs-8">VIDEOS</a></li>
-                <li><a data-toggle="tab" href="#tabs-9">MOVIES</a></li>
-                <li><a data-toggle="tab" href="#tabs-10">GAMING</a></li>
-                <li><a data-toggle="tab" href="#tabs-11">SCARY</a></li>
-            </ul>
+                <?php 
+                    include ("config.php");
+                    $sql = "SELECT * FROM subsaiddit";
+                    $result = mysqli_query($conn, $sql);
+                    $subsaidditnames = array();
+                    $subsaidditdesc = array();
+                    while($row = mysqli_fetch_assoc($result)) {
+                        array_push($subsaidditnames, $row["title"]);
+                        array_push($subsaidditdesc, $row["description"]);
+                    }
+                    ?><li class='active'><a data-toggle='tab' href='#home'>HOME</a></li><?php
+                    $x = 0;
+                    $y = 1;
+                    while($x<count($subsaidditnames)){
+                        ?><li><a data-toggle='tab' href='#tabs-<?php echo $y; ?>'><?php echo $subsaidditnames[$x]; ?></a></li>
+                        <?php
+                        $x++;
+                        $y++;        
+                    }                    
+                ?>
 
+            </ul>
             <div class="tab-content">
-                <div id="home" class="tab-pane fade in active">
-                    <h3>HOME</h3>
-                </div>
+                    <div id="home" class = "tab-pane fade in active">
+                        <h3>HOME</h3>    
+                    </div>
                 
-                <div id="tabs-1" class="tab-pane fade">
-                    <h3>NEWS</h3> 
-                </div>
-                
-                <div id="tabs-2" class="tab-pane fade">
-                    <h3>DOGS</h3> 
-                </div>
-                
-                <div id="tabs-3" class="tab-pane fade">
-                    <h3>CATS</h3> 
-                </div>
-                
-                <div id="tabs-4" class="tab-pane fade">
-                    <h3>FUNNY</h3>  
-                </div>
-                
-                <div id="tabs-5" class="tab-pane fade">
-                    <h3>GIFS</h3>  
-                </div>
-                
-                <div id="tabs-6" class="tab-pane fade">
-                    <h3>MEMES</h3>
-                </div>
-                
-                <div id="tabs-7" class="tab-pane fade">
-                    <h3>SHOCKING</h3>
-                </div>
-                
-                <div id="tabs-8" class="tab-pane fade">
-                    <h3>VIDEOS</h3>  
-                </div>
-                
-                <div id="tabs-9" class="tab-pane fade">
-                    <h3>MOVIES</h3>
-                </div>
-                
-                <div id="tabs-10" class="tab-pane fade">
-                    <h3>GAMING</h3>  
-                </div>
-      
-                <div id="tabs-11" class="tab-pane fade">
-                    <h3>SCARY</h3>
-                </div>
-      
+                    <?php 
+                        $x = 0;
+                        $y = 1;
+                        while($x<count($subsaidditnames)){
+                            ?>
+                            <div id="tabs-<?php echo $y;?>" class = "tab-pane fade">  
+                                <h3><?php echo $subsaidditnames[$x]; ?></h3>
+                                <p><?php echo $subsaidditdesc[$x];?></p>
+                            </div>
+                       <?php     
+                            $x++;
+                            $y++;
+                        }                  
+                    ?>
             </div>
         </div>
        
