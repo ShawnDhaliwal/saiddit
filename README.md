@@ -18,7 +18,7 @@ Note: You will have to download and install sweetalert for this to run properly.
 1. Everything other than what is mentioned above. See project pdf.
 2. [Would be nice if fixed] Buttons need to be pressed twice for them to register. Sometimes page needs to be refreshed for   buttons to work.
 3. Layout is buggy at some spots. You will notice this if you try to edit the style.css file.
-4. [URGENT FIXING] A list of all subsaiddits appears between the navigation bar and tabs. Not good. Can't figure out why, makes no sense. This list should only appear in a popup.
+4. [FIXED] A list of all subsaiddits appears between the navigation bar and tabs. Not good. Can't figure out why, makes no sense. This list should only appear in a popup. LESSON LEARNED: NEVER USE JQUERY MOBILE FOR WEB BOWSER, BUT TOO LATE NOW WE KEEP IT 
 
 
 NOTE
