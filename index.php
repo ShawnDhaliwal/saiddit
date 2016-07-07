@@ -216,7 +216,30 @@
                 $result = mysqli_query($conn, $sql);
                 $row = mysqli_fetch_assoc($result);
                 
-
+        }
+        
+        if(isset($_POST['subscribebutton'])){
+            include ("config.php");
+            $subsaidditid = $_POST['subscribebuttonl'];
+            
+            $user = $_SESSION['username_in'];
+            $sql="SELECT * FROM users WHERE username='$user'";
+            $result=mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+            $userid = $row["id"];
+            
+          
+            
+            $sql = "INSERT INTO subscribe (user_id, subsaiddit_id)
+            VALUES ('$userid','$subsaidditid')";
+            $result = mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+            
+            ?>
+            <script type="text/javascript">
+                swal("Success","You have subscribed to a new subsaiddit","success");
+            </script>
+            <?php   
         }
         
         //if remvoe friend submit button is pressed 
@@ -278,12 +301,12 @@
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#">Hello <?php echo $_SESSION['username_in']?></a>
+                    <a class="navbar-brand" href="#"><?php echo $_SESSION['username_in']?></a>
                 </div>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#allsubsaidditspopup" data-rel="popup">All Subsaiddits</a></li>
                     <li><a href="#mysubsaidditspopup" data-rel="popup">Subscribed</a></li>
-                    <li><a href="#createmysubsaidditspopup" data-rel="popup">Create Subsaiddit</a></li>
+                    <li><a href="#createmysubsaidditspopup" data-rel="popup">New Subsaiddit</a></li>
                     <li><a href="#friendspopup" data-rel="popup">View Friends</a></li>
                     <li><a href = "#addfriendspopup" data-rel="popup">Add Friend</a></li>
                     <li><a href = "#removefriendspopup" data-rel="popup">Remove Friend</a></li>
@@ -495,9 +518,11 @@
                     $result = mysqli_query($conn, $sql);
                     $subsaidditnames = array();
                     $subsaidditdesc = array();
+                    $subsaidditids = array();
                     while($row = mysqli_fetch_assoc($result)) {
                         array_push($subsaidditnames, $row["title"]);
                         array_push($subsaidditdesc, $row["description"]);
+                        array_push($subsaidditids, $row["id"]);
                     }
                     ?><li class='active'><a data-toggle='tab' href='#home'>HOME</a></li><?php
                     $x = 0;
@@ -522,7 +547,10 @@
                         while($x<count($subsaidditnames)){
                             ?>
                             <div id="tabs-<?php echo $y;?>" class = "tab-pane fade">  
-                                <h3><?php echo $subsaidditnames[$x]; ?></h3>
+                                <h3><?php echo $subsaidditnames[$x]; ?><span style="float: right"><form method="post">
+                                    <input type="hidden" name="subscribebuttonl" value="<?php echo $subsaidditids[$x]?>"/>
+                                    <input type="submit" data-inline="true" value="Subscribe" name="subscribebutton"></form>
+                                    </span></h3>
                                 <p><?php echo $subsaidditdesc[$x];?></p>
                             </div>
                        <?php     
