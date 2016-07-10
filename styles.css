@@ -1,5 +1,4 @@
 
-
 .header{
     height: 50px;
     font-size: 50px;
@@ -7,75 +6,53 @@
 }
 
 
-
-.friendslist{
-    height:90px; 
-    width:87%;
-    overflow:hidden; 
-    overflow-y:scroll;
+            
+.navbar-default a{
+    font-size: 13px;
+    
 }
+
 
 .navbar {
     margin-bottom: 0 !important;
 }
 
-
-.subsaidditNavigation {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-}
-
-.subsaidditNavigation li {
-    float: left;
-}
-
-.subsaidditNavigation li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-/* Change the link color to #111 (black) on hover */
-.subsaidditNavigation li a:hover {
-    background-color: #111;
-    color: white;
-}
-
 * {margin: 0; padding: 0;}
 
-div .posts {
-  margin: 20px;
+#homesubscribe{
+    
+float: right;
+    
 }
 
-.posts {
+#buttoncontainer .ui-btn {
+    font-size: 11px;
+}
+
+.listset {
   list-style-type: none;
   width: 1000px;
 }
 
-.posts h3 {
+.listset h3 {
   font: bold 20px/1.5 Helvetica, Verdana, sans-serif;
 }
 
-.posts li img {
+.listset li img {
   float: left;
   margin: 0 15px 0 0;
 }
 
-.posts li p {
+.listset li p {
   font: 200 12px/1.5 Georgia, Times New Roman, serif;
 }
 
-.posts li {
+.listset li {
   padding: 10px;
   overflow: auto;
 }
 
-.posts li:hover {
+.listset li:hover {
   background: #eee;
   cursor: pointer;
 }

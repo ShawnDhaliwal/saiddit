@@ -242,6 +242,69 @@
             <?php   
         }
         
+        if(isset($_POST['deletePostbutton'])){
+            include("config.php");
+            $postid = $_POST['deletePostbuttonl'];
+            $sql = "DELETE FROM post WHERE id = '$postid'";
+            $result = mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+            ?> 
+            <script type="text/javascript">
+            swal("Post Deleted","","success");
+            </script>
+            <?php
+            
+        }
+            
+         if(isset($_POST['newpostsubmit'])){
+            include ('config.php');
+             
+            $user = $_SESSION['username_in'];
+            $sql="SELECT * FROM users WHERE username='$user'";
+            $result=mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+             
+            $userid = $row["id"];
+            $subsaidditname = $_POST['newpostTosubl'];
+            $title = $_POST['newpostTitlel'];
+            $url = $_POST['newpostURLl'];
+            $description = $_POST['newpostDescriptionl'];
+             
+            //get subsaiddit id
+             
+            $sql="SELECT * FROM subsaiddit WHERE title='$subsaidditname'";
+            $result=mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+            $subsaidditid = $row["id"];
+
+            //insert into post
+            $sql = "INSERT INTO post (title, url,text)
+            VALUES ('$title','$url','$description')";
+            $result = mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+             
+            //get post id
+            $sql="SELECT * FROM post WHERE title='$title'";
+            $result=mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+            $postid = $row["id"];
+             
+            //insert into post belongs to
+             
+            $sql = "INSERT INTO postbelongs (subsaiddit_id, post_id)
+            VALUES ('$subsaidditid','$postid')";
+            $result = mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+            
+            ?> 
+            <script type="text/javascript">
+            swal("Post successful","","success");
+            </script>
+            <?php
+        
+         }
+        
+        
         //if remvoe friend submit button is pressed 
         if(isset($_POST['removefriendsubmit'])){
             //get current loged in user id
@@ -306,7 +369,8 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#allsubsaidditspopup" data-rel="popup">All Subsaiddits</a></li>
                     <li><a href="#mysubsaidditspopup" data-rel="popup">Subscribed</a></li>
-                    <li><a href="#createmysubsaidditspopup" data-rel="popup">New Subsaiddit</a></li>
+                    <li><a href="#createmysubsaidditspopup" data-rel="popup">New Subsaiddit</a></li>                                    
+                    <li><a href="#newpostpopup" data-rel="popup" >New Post</a></li>
                     <li><a href="#friendspopup" data-rel="popup">View Friends</a></li>
                     <li><a href = "#addfriendspopup" data-rel="popup">Add Friend</a></li>
                     <li><a href = "#removefriendspopup" data-rel="popup">Remove Friend</a></li>
@@ -513,7 +577,6 @@
         <div class="container-fluid">
             <ul class="nav nav-tabs">
                 <?php 
-                    include ("config.php");
                     $sql = "SELECT * FROM subsaiddit";
                     $result = mysqli_query($conn, $sql);
                     $subsaidditnames = array();
@@ -538,7 +601,73 @@
             </ul>
             <div class="tab-content">
                     <div id="home" class = "tab-pane fade in active">
-                        <h3>HOME</h3>    
+                        <h3>HOME</h3>
+                        <ul class = "listset">
+                        <?php 
+                        include ("config.php");
+                        $sql = "SELECT * FROM post";
+                        $result = mysqli_query($conn, $sql);
+                        if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
+                           //get user id
+                            $user = $_SESSION['username_in'];
+                            $sql = "SELECT * FROM users WHERE username = '$user'";
+                            $result = mysqli_query($conn, $sql);
+                            $row = mysqli_fetch_assoc($result);
+                            $userid = $row["id"];
+                            
+                            /*go to subscribe table and store ids of the subsaiddits the user is subcribed too */
+                            
+                            $sql = "SELECT * FROM subscribe WHERE user_id = '$userid'";
+                            $result = mysqli_query($conn, $sql);
+                            $subscribed_subs_ids = array();
+                            while($row = mysqli_fetch_assoc($result)) {
+                                array_push($subscribed_subs_ids, $row["subsaiddit_id"]);
+                            }
+                            
+                            /* Go to the postbelongs to and get all the postids that belong to a subsaiddit the user is subcribed too*/
+                            
+                            
+                            $postids = array();
+                            $x=0;
+                            while($x<count($subscribed_subs_ids)){
+                                $sql = "SELECT * FROM postbelongs WHERE subsaiddit_id = '$subscribed_subs_ids[$x]'";
+                                $result = mysqli_query($conn, $sql);
+                                while($row = mysqli_fetch_assoc($result)) {
+                                    array_push($postids, $row["post_id"]);
+                                }
+                                $x++;
+                            }
+                            $x= 0;
+                            while($x<count($postids)){
+                                $sql = "SELECT * FROM post WHERE id = '$postids[$x]'";
+                                $result = mysqli_query($conn, $sql);
+                                 while($row = mysqli_fetch_assoc($result)) {
+                                     ?>
+                                    <li>
+                                    <img src="http://lorempixum.com/100/100/nature/1" >
+                                    <h3><?php echo $row['title'];?></h3>
+                                    <p><?php echo $row['text'] ?></p> 
+                                    </li>
+                                    <?php  
+                                }
+                                $x++;
+                            }
+                            
+                        } else {
+                            while($row = mysqli_fetch_assoc($result)) {
+                            ?>
+                            <li>
+                            <img src="http://lorempixum.com/100/100/nature/1" >
+                            <h3><?php echo $row['title'];?></h3>
+                            <p><?php echo $row['text'] ?></p> 
+                            </li>
+
+                            <?php    
+                            }                            
+                        }
+
+                        ?>
+                        </ul>
                     </div>
                 
                     <?php 
@@ -551,7 +680,44 @@
                                     <input type="hidden" name="subscribebuttonl" value="<?php echo $subsaidditids[$x]?>"/>
                                     <input type="submit" data-inline="true" value="Subscribe" name="subscribebutton"></form>
                                     </span></h3>
-                                <p><?php echo $subsaidditdesc[$x];?></p>
+                                    <p><?php echo $subsaidditdesc[$x];?></p>
+                                    <ul class = "listset">
+                                    <?php 
+                                    include ("config.php");
+                                    $z = 0;
+                                    $sql="SELECT * FROM postbelongs WHERE subsaiddit_id='$subsaidditids[$x]'";
+                                    $result=mysqli_query($conn, $sql);
+                                    $postids = array();
+                                    
+                                    while($row = mysqli_fetch_assoc($result)) {
+                                        array_push($postids, $row["post_id"]);
+                                    }
+      
+                                    while($z < count($postids)){
+                                    $sql="SELECT * FROM post WHERE id='$postids[$z]'";
+                                    $result=mysqli_query($conn, $sql);
+                                     while($row = mysqli_fetch_assoc($result)) {
+                                    ?>
+                                        
+                                        <form method = "post" >
+                                        <li>
+                                            <img src="http://lorempixum.com/100/100/nature/1" >
+                                            <h3><?php echo $row['title'];?></h3>
+                                            <p><?php echo $row['text'] ?></p>
+                                            <div data-role="button" data-type="submit" data-inline="true" id="buttoncontainer">
+                                            <input type="hidden" name="deletePostbuttonl" value="<?php echo $row['id']?>"/>
+                                            <input type = "submit" data-inline="true" value="Delete"  name="deletePostbutton">
+                                            </div>
+
+                                            
+                                            </li>
+                                        </form>
+                                        <?php
+                                        }
+                                        $z++;
+                                    }
+                                    ?>
+                                </ul>
                             </div>
                        <?php     
                             $x++;
@@ -561,7 +727,25 @@
             </div>
         </div>
        
-  
+   <div data-role="popup" class = "ui-content" id="newpostpopup" style="min-width:500px;">
+            <form name = "newpostform" method="post" action="">
+                <h3>New Post Information</h3>
+                <label for="newpostTosub" class="ui-hidden-accessible">To Subsaiddit:</label>
+                <input type="text" name="newpostTosubl" id="newpostTosub" placeholder="subsaiddit name.." required>
+                
+                <label for="newpostTitle" class="ui-hidden-accessible">Title:</label>
+                <input type="text" name="newpostTitlel" id="newpostTitle" placeholder="Title.." required>
+                  
+                <label for="newpostTitle" class="ui-hidden-accessible">URL:</label>
+                <input type="text" name="newpostURLl" id="newpostURL" placeholder="URL..">
+
+                <textarea type="text" name="newpostDescriptionl" id="newpostDescription" placeholder="Description..." cols="40" rows="50">
+                </textarea>
+                
+                <input type="submit" action = "" data-mini="true" data-inline="true" value="Post" name = "newpostsubmit">
+                
+            </form>
+        </div>
 
         
     </body>
