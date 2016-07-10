@@ -14,7 +14,7 @@ Note: You will have to download and install sweetalert for this to run properly.
 10. Basic design of subsaiddit pages. Subsaiddits still need to be filled. Should be done soon.
 11. Users can create subsaiddits. Users automaticlly subscribe to subsaiddits they have created.
 12. Users can subscribe to subsaiddits they choose
-13. Next - Filling the subsaiddits with posts
+13. Users can create posts and delete a post. If logged in, home page shows posts only from subscribed subsaiddits. If not logged in, home page shows posts from all subsaiddits. 
 
 
 ### What needs to be done
