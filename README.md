@@ -27,6 +27,7 @@ Note: You will have to download and install sweetalert for this to run properly.
 5. Favoriting a post [Doable]
 6. Everything to do with post comments [Gunna be a pain, i think]
 7. Making it so user can only upvote or downvote once, and nvr both at the same time. [Doable]
+8. ive added screenshots of how i set up the databse tables in phpmyadmin sql. You will need to match these table names and their data field names for the project to run. Or you can edit the names inside the code to match your own table names and data names.  Note, for tables that have two foreign keys, you will have to make the column names indexes then go to relations view and add constraints to both of them. You might have to edit the port numer in config.php based on how you set the project up. Can follow my config.php as a guide. For some reason, mine uses mysqli to connect. Yours may or may not be different.
  
 
 
