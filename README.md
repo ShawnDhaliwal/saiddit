@@ -15,13 +15,18 @@ Note: You will have to download and install sweetalert for this to run properly.
 11. Users can create subsaiddits. Users automaticlly subscribe to subsaiddits they have created.
 12. Users can subscribe to subsaiddits they choose
 13. Users can create posts and delete a post. If logged in, home page shows posts only from subscribed subsaiddits. If not logged in, home page shows posts from all subsaiddits. 
+14. users can upvote and down vote a post
+15. post goes to a link of a webpage if there is one, when clicked
 
 
 ### What needs to be done
-1. Everything other than what is mentioned above. See project pdf.
-2. [Would be nice if fixed] Buttons need to be pressed twice for them to register. Sometimes page needs to be refreshed for   buttons to work.
-3. Layout is buggy at some spots. You will notice this if you try to edit the style.css file.
-4. [FIXED] A list of all subsaiddits appears between the navigation bar and tabs. Not good. Can't figure out why, makes no sense. This list should only appear in a popup. LESSON LEARNED: NEVER USE JQUERY MOBILE FOR DESKTOP WEB DEVELOPMENT, BUT TOO LATE NOW WE KEEP IT 
+1. [Would be nice if fixed] Buttons need to be pressed twice for them to register. Sometimes page needs to be refreshed for   buttons to work.
+2. Layout is buggy at some spots. You will notice this if you try to edit the style.css file.
+3. Fix up how the code looks
+4. the reputation of a user based on the upvotes and downvotes of their posts can be seen next to their name on the top left, when loged in. But atm, it does not change if one of their posts are upvoted or downvoted, its always zero. So it still needs to be fully implemented [Doable]
+5. Favoriting a post [Doable]
+6. Everything to do with post comments [Gunna be a pain]
+ 
 
 
 
