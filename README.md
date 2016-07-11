@@ -25,7 +25,8 @@ Note: You will have to download and install sweetalert for this to run properly.
 3. Fix up how the code looks
 4. the reputation of a user based on the upvotes and downvotes of their posts can be seen next to their name on the top left, when loged in. But atm, it does not change if one of their posts are upvoted or downvoted, its always zero. So it still needs to be fully implemented [Doable]
 5. Favoriting a post [Doable]
-6. Everything to do with post comments [Gunna be a pain]
+6. Everything to do with post comments [Gunna be a pain, i think]
+7. Making it so user can only upvote or downvote once, and nvr both at the same time. [Doable]
  
 
 
