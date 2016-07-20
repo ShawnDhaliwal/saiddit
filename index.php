@@ -245,6 +245,33 @@
             <?php   
         }
         
+        if(isset($_POST['favouritePostbutton'])){
+            include ("config.php");
+            /* the hidden input... thill get me the subaiddit id the user wishes to subscribe to */
+            $postid = $_POST['favouritePostbuttonl'];
+            
+            /* get user id*/
+            $user = $_SESSION['username_in'];
+            $sql="SELECT * FROM users WHERE username='$user'";
+            $result=mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+            $userid = $row["id"];
+            
+          
+            /* insert ids into subcribe table */
+            $sql = "INSERT INTO favourites (userid, postid)
+            VALUES ('$userid','$postid')";
+            $result = mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);
+            /* show success msg */
+            ?>
+            <script type="text/javascript">
+                swal("Success","Post added to favourites","success");
+            </script>
+            <?php   
+        }
+        
+        
         if(isset($_POST['deletePostbutton'])){
             include("config.php");
             /* thisll get me the id of the post the user wishes to delete */
@@ -262,8 +289,9 @@
         
         if(isset($_POST['upvotePostbutton'])){
             include("config.php");
+            
             /* this will get me the id of the post the user wants to upvote */
-            $postid = $_POST['downvotePostbuttonl'];
+            $postid = $_POST['upvotePostbuttonl'];
             $sql = "SELECT * FROM post WHERE id = '$postid'";
             $result = mysqli_query($conn, $sql);
             $row = mysqli_fetch_assoc($result);
@@ -273,6 +301,20 @@
             $result = mysqli_query($conn, $sql);
             $row = mysqli_fetch_assoc($result);
             
+            $sql = "SELECT * FROM post WHERE id = '$postid'";
+            $result = mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);   
+            $creator = $row['creator'];
+            
+            $sql = "SELECT * FROM users WHERE username = '$creator'";
+            $result = mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result); 
+            $reputation = $row['reputation'];
+            $reputation++;
+            
+            $sql = "UPDATE users SET reputation = '$reputation' WHERE username = '$creator'";
+            $result = mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);    
         }
         
         if(isset($_POST['downvotePostbutton'])){
@@ -287,6 +329,21 @@
             $sql = "UPDATE post SET downvotes = '$downvotes' WHERE id ='$postid'";
             $result = mysqli_query($conn, $sql);
             $row = mysqli_fetch_assoc($result);
+            
+            $sql = "SELECT * FROM post WHERE id = '$postid'";
+            $result = mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);   
+            $creator = $row['creator'];
+            
+            $sql = "SELECT * FROM users WHERE username = '$creator'";
+            $result = mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result); 
+            $reputation = $row['reputation'];
+            $reputation--;
+            
+            $sql = "UPDATE users SET reputation = '$reputation' WHERE username = '$creator'";
+            $result = mysqli_query($conn, $sql);
+            $row = mysqli_fetch_assoc($result);    
             
             
         }
@@ -313,8 +370,8 @@
             $subsaidditid = $row["id"];
 
             //insert into post table
-            $sql = "INSERT INTO post (title, url,text)
-            VALUES ('$title','$url','$description')";
+            $sql = "INSERT INTO post (title, url,text, creator)
+            VALUES ('$title','$url','$description','$user')";
             $result = mysqli_query($conn, $sql);
             $row = mysqli_fetch_assoc($result);
              
@@ -417,7 +474,8 @@
                     <!-- These are the buttons that show up on the top of the screen, suh as logout and view friends. They are all popups, and once they are clicked, a form pops up. The code for that form can be viewed somewhere below. So the href refers to the popup html forms found below.-->
                     <li><a href="#allsubsaidditspopup" data-rel="popup">All Subsaiddits</a></li>
                     <li><a href="#mysubsaidditspopup" data-rel="popup">Subscribed</a></li>
-                    <li><a href="#createmysubsaidditspopup" data-rel="popup">New Subsaiddit</a></li>                                    
+                    <li><a href="#createmysubsaidditspopup" data-rel="popup">New Subsaiddit</a></li>  
+                    <li><a href="#favouritepostspopup" data-rel="popup">Favourites</a></li>
                     <li><a href="#newpostpopup" data-rel="popup" >New Post</a></li>
                     <li><a href="#friendspopup" data-rel="popup">View Friends</a></li>
                     <li><a href = "#addfriendspopup" data-rel="popup">Add Friend</a></li>
@@ -669,78 +727,22 @@
                         $sql = "SELECT * FROM post ORDER BY upvotes-downvotes DESC";
                         $result = mysqli_query($conn, $sql);
                         //check if user is loged in, we need to display top voted posts from.. //..subsaiddits the user is subcribed to
-                        if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
-                           //get user id
-                            $user = $_SESSION['username_in'];
-                            $sql = "SELECT * FROM users WHERE username = '$user'";
-                            $result = mysqli_query($conn, $sql);
-                            $row = mysqli_fetch_assoc($result);
-                            $userid = $row["id"];
-                            
-                            /*go to subscribe table and store ids of the subsaiddits the user is subcribed too */
-                            
-                            $sql = "SELECT * FROM subscribe WHERE user_id = '$userid'";
-                            $result = mysqli_query($conn, $sql);
-                            $subscribed_subs_ids = array();
-                            while($row = mysqli_fetch_assoc($result)) {
-                                array_push($subscribed_subs_ids, $row["subsaiddit_id"]);
-                            }
-                            
-                            /* Go to the postbelongs to and get all the postids that belong to a subsaiddit the user is subcribed too*/
-                            
-                            
-                            $postids = array();
-                            $x=0;
-                            while($x<count($subscribed_subs_ids)){
-                                $sql = "SELECT * FROM postbelongs WHERE subsaiddit_id = '$subscribed_subs_ids[$x]'";
-                                $result = mysqli_query($conn, $sql);
-                                while($row = mysqli_fetch_assoc($result)) {
-                                    array_push($postids, $row["post_id"]);
-                                }
-                                $x++;
-                            }
-                            $x= 0;
-                            //beging displaying the contents of the posts according to ids... //...found
-                            while($x<count($postids)){
-                                $sql = "SELECT * FROM post WHERE id = '$postids[$x]'";
-                                $result = mysqli_query($conn, $sql);
-   
-                                 while($row = mysqli_fetch_assoc($result)) {
-                                     ?>
-                                    <form method="post">
-                                    <li>
-                                    <img src="http://lorempixum.com/100/100/nature/1" >
-                                      <h3><a href="<?php echo $row['url'] ?>"><?php echo $row['title'];?></a>
-                                            </h3>
-                                    <p><?php echo $row['text'] ?></p> 
-                                    <div data-role="button" data-type="submit" data-inline="true" id="buttoncontainer">
-                                    <input type="hidden" name="deletePostbuttonl" value="<?php echo $row['id']?>"/>
-                                    <input type="hidden" name="upvotePostbuttonl" value="<?php echo $row['id']?>"/>
-                                    <input type="hidden" name="downvotePostbuttonl" value="<?php echo $row['id']?>"/>
-                                    <input type = "submit" data-inline="true" value="Upvote"  name="upvotePostbutton">
-                                    <input type = "submit" data-inline="true" value="Downvote"  name="downvotePostbutton">
-                                    <input type = "submit" data-inline="true" value="Delete"  name="deletePostbutton">
-                                    <?php
-                                        $rep = $row['upvotes'] - $row['downvotes'];
-                                        echo $rep;
-                                        
-                                    ?>
-                                    </div>
-                                    </li>
-                                    </form>
-                                    <?php  
-                                }
-                                $x++;
-                            }
-                            
-                        } else {
+                   
                             //if user was not loged in, just display all subsaiddit posts.. //..based on votes
                             while($row = mysqli_fetch_assoc($result)) {
                             ?>
                             <form method = "post">
                             <li>
                             <!-- the picture -->
-                            <img src="http://lorempixum.com/100/100/nature/1" >
+                              <img HEIGHT="100" WIDTH="100" src="
+                            
+                                    <?php 
+                                if(getimagesize($row['url']) !== false) {
+                                      echo $row['url']; 
+                                }
+                                else{
+                                ?>https://camo.githubusercontent.com/b13830f5a9baecd3d83ef5cae4d5107d25cdbfbe/68747470733a2f2f662e636c6f75642e6769746875622e636f6d2f6173736574732f3732313033382f313732383830352f35336532613364382d363262352d313165332d383964312d3934376632373062646430332e706e67 <?php
+                                }?>" >
                               <h3><a href="<?php echo $row['url'] ?>"><?php echo $row['title'];?></a>
                             </h3>
                             <p><?php echo $row['text'] ?></p> 
@@ -749,13 +751,19 @@
                                     <input type="hidden" name="deletePostbuttonl" value="<?php echo $row['id']?>"/>
                                     <input type="hidden" name="upvotePostbuttonl" value="<?php echo $row['id']?>"/>
                                     <input type="hidden" name="downvotePostbuttonl" value="<?php echo $row['id']?>"/>
+                                    <input type="hidden" name="favouritePostbuttonl" value="<?php echo $row['id']?>"/>
+                                   <input type = "submit" data-inline="true" value="Favourite"  name="favouritePostbutton">
+                                    <input type = "submit" data-inline="true" value="Comments"  name="viewCommentbutton">
+                                    <input type = "submit" data-inline="true" value="Add Comment"  name="addCommentbutton">
                                     <input type = "submit" data-inline="true" value="Upvote"  name="upvotePostbutton">
                                     <input type = "submit" data-inline="true" value="Downvote"  name="downvotePostbutton">
                                     <input type = "submit" data-inline="true" value="Delete"  name="deletePostbutton">
                                                                                     <?php }
                                         $rep = $row['upvotes'] - $row['downvotes'];
-                                        echo "Reputation: ";
                                         echo $rep;
+                                        $creator = $row['creator'];
+                                        print " -$creator";
+                                        
                                         
                                     ?>
                                             </div>   
@@ -764,7 +772,7 @@
                             </form>
                             <?php    
                             }                            
-                        }
+                        
 
                         ?>
                         </ul>
@@ -814,7 +822,15 @@
                                         
                                         <form method = "post" >
                                         <li>
-                                            <img src="http://lorempixum.com/100/100/nature/1" >
+                                             <img HEIGHT="100" WIDTH="100" src="
+                            
+                                    <?php 
+                                if(getimagesize($row['url']) !== false) {
+                                      echo $row['url']; 
+                                }
+                                else{
+                                ?>https://camo.githubusercontent.com/b13830f5a9baecd3d83ef5cae4d5107d25cdbfbe/68747470733a2f2f662e636c6f75642e6769746875622e636f6d2f6173736574732f3732313033382f313732383830352f35336532613364382d363262352d313165332d383964312d3934376632373062646430332e706e67 <?php
+                                }?>" >
                                             <h3><a href="<?php echo $row['url'] ?>"><?php echo $row['title'];?></a>
                                             </h3>
                                             <p><?php echo $row['text'] ?></p>
@@ -824,14 +840,20 @@
                                             <input type="hidden" name="deletePostbuttonl" value="<?php echo $row['id']?>"/>
                                             <input type="hidden" name="upvotePostbuttonl" value="<?php echo $row['id']?>"/>
                                             <input type="hidden" name="downvotePostbuttonl" value="<?php echo $row['id']?>"/>
+                                            <input type="hidden" name="favouritePostbuttonl" value="<?php echo $row['id']?>"/>
+                                            <input type = "submit" data-inline="true" value="Favourite"  name="favouritePostbutton">
+                                            <input type = "submit" data-inline="true" value="Comments"  name="viewCommentbutton">
+                                            <input type = "submit" data-inline="true" value="Add Comment"  name="addCommentbutton">
                                             <input type = "submit" data-inline="true" value="Upvote"  name="upvotePostbutton">
                                             <input type = "submit" data-inline="true" value="Downvote"  name="downvotePostbutton">
                                             <input type = "submit" data-inline="true" value="Delete"  name="deletePostbutton">
+                                                
                                         <?php } ?>
                                                                                     <?php
                                         $rep = $row['upvotes'] - $row['downvotes'];
-                                        echo "Reputation: ";
                                          echo $rep;
+                                        $creator = $row['creator'];
+                                        print " -$creator";
                                         
                                     ?>
                                             </div>
@@ -872,6 +894,43 @@
                 <input type="submit" action = "" data-mini="true" data-inline="true" value="Post" name = "newpostsubmit">
                 
             </form>
+        </div>
+        
+      <div data-role="popup" class = "ui-content" id="favouritepostspopup" style="min-width:250px;">
+                <h3>Favourite Posts</h3>
+                <?php 
+                    include ("config.php");
+                    //get user id
+                    $user = $_SESSION['username_in'];
+                    $sql = "SELECT * FROM users WHERE username = '$user'";
+                    $result = mysqli_query($conn, $sql);
+                    $row = mysqli_fetch_assoc($result);
+                    $userid = $row["id"];
+                    $sql = "SELECT * FROM favourites WHERE userid = '$userid'";
+                    $result = mysqli_query($conn, $sql);
+                    $favouriteposts = array();
+
+                    while($row = mysqli_fetch_assoc($result)) {
+                        array_push($favouriteposts, $row['postid']);
+                    }
+                    
+                    $x = 0;
+                    while($x <count($favouriteposts)){
+                        
+                        $sql = "SELECT * FROM post WHERE id = '$favouriteposts[$x]'";
+                        $result = mysqli_query($conn, $sql);
+                        $row = mysqli_fetch_assoc($result);
+                        $postTitle = $row["title"];
+                        $postURL = $row["url"];
+
+                        echo "<li style='list-style-type: none;'><a href='".$postURL."'>".$postTitle."</a></li>";
+                        
+                        $x++;        
+                    }
+                        
+            
+            
+                ?>
         </div>
 
         
