@@ -747,14 +747,16 @@
                             </h3>
                             <p><?php echo $row['text'] ?></p> 
                               <div data-role="button" data-type="submit" data-inline="true" id="buttoncontainer">
+                                  <a href="#viewCommentspopup" data-rel="popup"><input type = "submit" data-inline="true" value="Comments"  name="viewComments"></a>
                                   <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){?>
                                     <input type="hidden" name="deletePostbuttonl" value="<?php echo $row['id']?>"/>
                                     <input type="hidden" name="upvotePostbuttonl" value="<?php echo $row['id']?>"/>
                                     <input type="hidden" name="downvotePostbuttonl" value="<?php echo $row['id']?>"/>
                                     <input type="hidden" name="favouritePostbuttonl" value="<?php echo $row['id']?>"/>
                                    <input type = "submit" data-inline="true" value="Favourite"  name="favouritePostbutton">
-                                    <input type = "submit" data-inline="true" value="Comments"  name="viewCommentbutton">
-                                    <input type = "submit" data-inline="true" value="Add Comment"  name="addCommentbutton">
+                            
+                                                
+                                         <a href="#addCommentpopup" data-rel="popup"><input type = "submit" data-inline="true" value="Add Comment"  name="addComments"></a> 
                                     <input type = "submit" data-inline="true" value="Upvote"  name="upvotePostbutton">
                                     <input type = "submit" data-inline="true" value="Downvote"  name="downvotePostbutton">
                                     <input type = "submit" data-inline="true" value="Delete"  name="deletePostbutton">
@@ -835,15 +837,23 @@
                                             </h3>
                                             <p><?php echo $row['text'] ?></p>
                                             <div data-role="button" data-type="submit" data-inline="true" id="buttoncontainer">
+                                                <a href="#viewCommentspopup" data-rel="popup"><input type = "submit" data-inline="true" value="Comments"  name="viewComments"></a>
                                         <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){?>
 
                                             <input type="hidden" name="deletePostbuttonl" value="<?php echo $row['id']?>"/>
                                             <input type="hidden" name="upvotePostbuttonl" value="<?php echo $row['id']?>"/>
                                             <input type="hidden" name="downvotePostbuttonl" value="<?php echo $row['id']?>"/>
                                             <input type="hidden" name="favouritePostbuttonl" value="<?php echo $row['id']?>"/>
+                                            
+                                            <input type="hidden" name="postCommentbuttonl" value="<?php echo $row['id']?>"/>
+                                                
                                             <input type = "submit" data-inline="true" value="Favourite"  name="favouritePostbutton">
-                                            <input type = "submit" data-inline="true" value="Comments"  name="viewCommentbutton">
-                                            <input type = "submit" data-inline="true" value="Add Comment"  name="addCommentbutton">
+                                                
+                                                
+                                          <a href="#viewCommentspopup" data-rel="popup"><input type = "submit" data-inline="true" value="Comments"  name="viewComments"></a>
+                                                
+                                         <a href="#addCommentpopup" data-rel="popup"><input type = "submit" data-inline="true" value="Add Comment"  name="addComments"></a> 
+                                                
                                             <input type = "submit" data-inline="true" value="Upvote"  name="upvotePostbutton">
                                             <input type = "submit" data-inline="true" value="Downvote"  name="downvotePostbutton">
                                             <input type = "submit" data-inline="true" value="Delete"  name="deletePostbutton">
@@ -932,7 +942,38 @@
             
                 ?>
         </div>
+        
+         <div data-role="popup" class = "ui-content" id="viewCommentspopup" style="min-width:250px;">
+                <h3>Comments</h3>
+                <?php 
+            
+                        echo "No Comments";
+                  
+            
+                ?>
+        </div>
+ <div data-role="popup" class = "ui-content" id="addCommentpopup" style="min-width:500px;">
+            <form  method="post" >
+                <h3>Add Comment</h3>
+                
+                <textarea type="text" name="textl" id="text" placeholder="Description..." cols="40" rows="50">
+                </textarea>
+                
+                <input type="submit" action = "" data-mini="true" data-inline="true" value="Post" name = "newcommentsubmit">
+                
+            </form>
+</div>
+<?php        
+ if(isset($_POST['newcommentsubmit'])){
+            include ("config.php");
 
+            ?>
+            <script type="text/javascript">
+                swal("Success","Comment Submitted","success");
+            </script>
+            <?php   
+        }
+ ?>       
         
     </body>
 
