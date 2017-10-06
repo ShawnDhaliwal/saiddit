@@ -1,5 +1,5 @@
 # saiddit
-Using Bootstrap, Jquery, Javascript, PHP, CSS, HTML, MySQL
+Using Bootstrap, Jquery, JavaScript, PHP, CSS, HTML, MySQL
 Note: You will have to download and install sweetalert for this to run properly.
 ### What has been done
 1. UI layout using HTML, CSS, Jquery, and Bootstrap
@@ -23,9 +23,9 @@ Note: You will have to download and install sweetalert for this to run properly.
 1. [Would be nice if fixed] Buttons need to be pressed twice for them to register. Sometimes page needs to be refreshed for   buttons to work.
 2. Layout is buggy at some spots. You will notice this if you try to edit the style.css file.
 3. Fix up how the code looks
-4. Everything to do with post comments [Gunna be a pain, i think]
-5. Making it so user can only upvote or downvote once, and never both at the same time. [Doable]
-6. ive added screenshots of how i set up the databse tables in phpmyadmin sql. You will need to match these table names and their data field names for the project to run. Or you can edit the names inside the code to match your own table names and data names.  Note, for tables that have two foreign keys, you will have to make the column names indexes then go to relations view and add constraints to both of them. You might have to edit the port numer in config.php based on how you set the project up. Can follow my config.php as a guide. For some reason, mine uses mysqli to connect. Yours may or may not be different.
+4. Everything to do with post comments 
+5. Making it so user can only upvote or downvote once, and never both at the same time. 
+6. ive added screenshots of how i set up the databse tables in phpmyadmin sql. You will need to match these table names and their data field names for the project to run. Or you can edit the names inside the code to match your own table names and data names.  Note, for tables that have two foreign keys, you will have to make the column names indexes then go to relations view and add constraints to both of them. You might have to edit the port number in config.php based on how you set the project up. Can follow my config.php as a guide. For some reason, mine uses mysqli to connect. Yours may or may not be different.
  
 
 
